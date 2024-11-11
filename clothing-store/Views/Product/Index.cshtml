@@ -1,7 +1,33 @@
-﻿
-@{
-    ViewData["Title"] = "Index";
+﻿@{
+    ViewData["Title"] = "Product Index";
 }
 
-<h1>Product Index</h1>
+<h2>Product Index</h2>
 
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Product</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Placeholder for product list. Replace with actual data when available -->
+        <tr>
+            <td>1</td>
+            <td>Sample Product</td>
+            <td>$10.00</td>
+            <td>
+                <a asp-action="Details" asp-route-id="1" class="btn btn-info">Details</a>
+                <a asp-action="Edit" asp-route-id="1" class="btn btn-warning">Edit</a>
+                <a asp-action="Delete" asp-route-id="1" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
