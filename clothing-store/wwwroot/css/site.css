@@ -1,0 +1,62 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+  background-color: #000;
+  color:#fff
+}
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0px;
+    background-color: #000;
+}
+
+    .navbar ul {
+        display: flex;
+        list-style-type: none;
+        padding-inline-start:0px;
+    }
+
+        .navbar ul li {
+            margin: 0 10px;
+        }
+
+            .navbar ul li a {
+                text-decoration: none;
+                color: #fff;
+                font-size: 14px;
+                letter-spacing: 1px;
+            }
+
+.logo {
+    flex-grow: 1;
+    text-align: center;
+}
+
+    .logo img {
+        height: 70px; /* Dopasuj rozmiar logo */
+        width: auto;
+    }
+footer {
+    background-color: #111;
+    color: #888;
+}
