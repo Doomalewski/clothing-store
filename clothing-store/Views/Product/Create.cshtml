@@ -1,18 +1,71 @@
+@model clothing_store.Models.Product.Product
+
 @{
-    ViewData["Title"] = "Create Product";
+    ViewBag.Title = "Dodaj nowy produkt";
+    var brands = ViewBag.Brands as List<Brand>;
 }
 
-<h2>Create Product</h2>
+<h2>Dodaj nowy produkt</h2>
 
-<form asp-action="Create" method="post">
+<form asp-action="Create" method="post" enctype="multipart/form-data">
     <div class="form-group">
-        <label for="Name">Product Name</label>
-        <input type="text" class="form-control" id="Name" name="Name" required />
+        <label for="Name">Nazwa produktu</label>
+        <input type="text" class="form-control" id="Name" name="Name" required placeholder="Wpisz nazwê produktu" />
     </div>
+
     <div class="form-group">
-        <label for="Price">Price</label>
-        <input type="number" class="form-control" id="Price" name="Price" required />
+        <label for="Brand">Marka</label>
+        <select class="form-control" id="Brand" name="Brand.BrandId">
+            <option value="">Wybierz markê</option>
+            @if (brands != null)
+            {
+                foreach (var brand in brands)
+                {
+                    <option value="@brand.BrandId">@brand.Name</option>
+                }
+            }
+        </select>
+        <small class="form-text text-muted">Jeœli marka nie istnieje na liœcie, wpisz now¹ poni¿ej:</small>
+        <input type="text" class="form-control mt-2" id="BrandName" name="Brand.Name" placeholder="Wpisz nazwê marki" />
     </div>
-    <button type="submit" class="btn btn-primary">Create</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+
+    <div class="form-group">
+        <label for="Description">Opis</label>
+        <textarea class="form-control" id="Description" name="Description" rows="3" placeholder="Wpisz opis produktu"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="Price">Cena (PLN)</label>
+        <input type="number" class="form-control" id="Price_Amount" name="Price.Amount" step="0.01" min="0" required placeholder="Wpisz cenê" />
+        <input type="hidden" name="Price.Currency" value="PLN" />
+    </div>
+
+    <div class="form-group">
+        <label for="PhotoPath">Œcie¿ka zdjêcia</label>
+        <input type="text" class="form-control" id="PhotoPath" name="PhotoPath" placeholder="Wpisz œcie¿kê do zdjêcia (opcjonalnie)" />
+    </div>
+
+    <div class="form-group">
+        <label for="uploadPhoto">Dodaj zdjêcie g³ówne</label>
+        <input type="file" class="form-control-file" id="uploadPhoto" name="uploadPhoto" accept="image/*" />
+    </div>
+
+    <div class="form-group">
+        <label for="uploadFiles">Dodaj dodatkowe pliki (opcjonalnie)</label>
+        <input type="file" class="form-control-file" id="uploadFiles" name="uploadFiles" multiple />
+    </div>
+
+    <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" id="Visible" name="Visible" checked />
+        <label class="form-check-label" for="Visible">Widoczny</label>
+    </div>
+
+    <div class="form-group">
+        <label for="Quantity">Iloœæ na stanie</label>
+        <input type="number" class="form-control" id="Quantity" name="Quantity" min="0" required placeholder="Wpisz iloœæ" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Dodaj produkt</button>
 </form>
+
+<a asp-action="Index" class="btn btn-secondary mt-3">Powrót do listy produktów</a>

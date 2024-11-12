@@ -56,6 +56,88 @@ body {
         height: 70px; /* Dopasuj rozmiar logo */
         width: auto;
     }
+.banner {
+    width: 98%;
+    margin: 0 auto; /* Wyœrodkowanie banera */
+    height: 400px;
+    background: url('https://picsum.photos/2000/400') no-repeat center center/cover;
+    display: flex;
+    position: center;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: transform 0.5s ease, background-size 0.5s ease;
+    margin-top:50px;
+}
+
+    /* Efekt powiêkszenia t³a przy hover */
+    .banner:hover {
+        transform: scale(1.02); /* Delikatne powiêkszenie banera */
+    }
+
+/* Efekt przejœcia dla zawartoœci banera */
+.banner-content {
+    color: #fff;
+    text-align: center;
+    z-index: 1;
+    transition: color 0.5s, transform 0.5s ease;
+}
+
+/* Efekt hover - zmiana koloru i rozmiaru tekstu */
+.banner:hover .banner-content {
+    transform: scale(1.1); /* Powiêkszenie tekstu */
+}
+
+/* Pó³przezroczysta warstwa na tle */
+.banner::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3); /* Przyciemnia t³o */
+    transition: background 0.5s ease;
+}
+
+/* Efekt hover - rozjaœnienie t³a */
+.banner:hover::after {
+    background: rgba(255, 255, 255, 0.1); /* Rozjaœnia t³o */
+}
+.banner-content {
+    position: relative;
+    color: #fff;
+    text-align: center;
+    z-index: 1;
+}
+
+.banner h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    padding:10px;
+    background-color:#000;
+    border-radius:10px;
+}
+
+.banner p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+.banner-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #ff6347;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+    .banner-btn:hover {
+        background-color: #ff4500;
+    }
 footer {
     background-color: #111;
     color: #888;

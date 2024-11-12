@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sklep_Konsola
-{
     public enum TopsCategory
     {
         TShirt,
@@ -43,4 +41,4 @@ namespace Sklep_Konsola
         Wallet,
         Other
     }
-}
+

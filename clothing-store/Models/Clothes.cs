@@ -5,8 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using clothing_store.Models.Product;
 
-namespace Sklep_Konsola
-{
+
     public class Tops : Product
     {
         public TopsCategory TopsType { get; set; }
@@ -26,5 +25,3 @@ namespace Sklep_Konsola
     {
         public AccessoryCategory AccessoryType { get; set; }
     }
-
-}

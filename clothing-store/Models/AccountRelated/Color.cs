@@ -4,8 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sklep_Konsola.AccountRelated
-{
+
     public enum Color
     {
         Red,
@@ -20,4 +19,3 @@ namespace Sklep_Konsola.AccountRelated
         Gray
     }
 
-}

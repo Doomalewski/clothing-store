@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using Sklep_Konsola.OrderRelated;
 
-namespace Sklep_Konsola.AccountRelated
-{
-    using System.ComponentModel.DataAnnotations;
 
     public class Account
     {
         [Key]
+        [Required(ErrorMessage = "AccountId is required.")]
         public int AccountId { get; set; }
 
         [Required(ErrorMessage = "Username is required.")]
@@ -28,6 +27,9 @@ namespace Sklep_Konsola.AccountRelated
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters long.")]
         public string Password { get; set; }
 
+        public int BasketId;
+
+        [ForeignKey(nameof(BasketId))]
         public Basket Basket { get; set; }
 
         public List<Order> Orders { get; set; }
@@ -65,5 +67,3 @@ namespace Sklep_Konsola.AccountRelated
         public bool Newsletter { get; set; }
     }
 
-
-}

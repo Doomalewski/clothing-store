@@ -4,8 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sklep_Konsola.OrderRelated
-{
+
     public enum StatusEnum
     {
         New,
@@ -13,4 +12,3 @@ namespace Sklep_Konsola.OrderRelated
         Finished,
         Cancelled
     }
-}

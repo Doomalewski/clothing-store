@@ -5,9 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sklep_Konsola.AccountRelated
-{
-    using System.ComponentModel.DataAnnotations;
 
     public class Address
     {
@@ -36,6 +33,3 @@ namespace Sklep_Konsola.AccountRelated
 
 
     }
-
-
-}
