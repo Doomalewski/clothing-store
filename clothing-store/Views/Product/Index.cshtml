@@ -1,33 +1,42 @@
-﻿@{
-    ViewData["Title"] = "Product Index";
+﻿@model List<Product>
+
+@{
+    ViewBag.Title = "Product List";
 }
 
-<h2>Product Index</h2>
+<h2>Product List</h2>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New Product</a>
-</p>
+<a asp-action="Create" class="btn btn-primary">Add New Product</a>
 
 <table class="table">
     <thead>
         <tr>
-            <th>Product ID</th>
             <th>Name</th>
+            <th>Brand</th>
             <th>Price</th>
+            <th>Tax</th>
+            <th>In Stock</th>
+            <th>New</th>
+            <th>Visible</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-        <!-- Placeholder for product list. Replace with actual data when available -->
-        <tr>
-            <td>1</td>
-            <td>Sample Product</td>
-            <td>$10.00</td>
-            <td>
-                <a asp-action="Details" asp-route-id="1" class="btn btn-info">Details</a>
-                <a asp-action="Edit" asp-route-id="1" class="btn btn-warning">Edit</a>
-                <a asp-action="Delete" asp-route-id="1" class="btn btn-danger">Delete</a>
-            </td>
-        </tr>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.Name</td>
+                <td>@product.Brand?.Name</td>
+                <td>@product.Price</td>
+                <td>@product.Tax.Value</td>
+                <td>@product.InStock</td>
+                <td>@product.New</td>
+                <td>@product.Visible</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@product.ProductId" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@product.ProductId" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

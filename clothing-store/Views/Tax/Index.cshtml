@@ -1,0 +1,32 @@
+﻿@model IEnumerable<clothing_store.Models.Tax>
+
+@{
+    ViewBag.Title = "Tax List";
+}
+
+<h2>Tax List</h2>
+
+<a asp-action="Create" class="btn btn-primary">Add New Tax</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Value (%)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tax in Model)
+        {
+            <tr>
+                <td>@tax.Name</td>
+                <td>@tax.Value</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@tax.TaxId" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@tax.TaxId" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

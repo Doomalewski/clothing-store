@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using clothing_store.Models.Product;
+using clothing_store.Models;
 
-
-    public class Tops : Product
+public class Tops : Product
     {
         public TopsCategory TopsType { get; set; }
     }

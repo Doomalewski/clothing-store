@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using clothing_store.Models.Product;
+
 
 
 namespace clothing_store.Models
@@ -21,12 +21,13 @@ namespace clothing_store.Models
 
 
         // Product
-        public virtual DbSet<clothing_store.Models.Product.Product> Products { get; set; }
+        public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Brand> Brands { get; set; }
         public virtual DbSet<Currency> Currencies { get; set; }
         public virtual DbSet<LinkedFile> Files { get; set; }
         public virtual DbSet<Opinion> Opinions { get; set; }
         public virtual DbSet<SpecialDiscount> SpecialDiscounts { get; set; }
+        public virtual DbSet<Tax> Taxes { get; set; }   
 
     }
 }

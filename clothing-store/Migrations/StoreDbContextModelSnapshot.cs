@@ -147,32 +147,6 @@ namespace clothing_store.Migrations
                     b.ToTable("Baskets");
                 });
 
-            modelBuilder.Entity("Brand", b =>
-                {
-                    b.Property<int>("BrandId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("BrandId"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<int>("YearOfFoundation")
-                        .HasColumnType("integer");
-
-                    b.HasKey("BrandId");
-
-                    b.ToTable("Brands");
-                });
-
             modelBuilder.Entity("Card", b =>
                 {
                     b.Property<int>("CardId")
@@ -404,7 +378,33 @@ namespace clothing_store.Migrations
                     b.ToTable("SpecialDiscounts");
                 });
 
-            modelBuilder.Entity("clothing_store.Models.Product.Product", b =>
+            modelBuilder.Entity("clothing_store.Models.Brand", b =>
+                {
+                    b.Property<int>("BrandId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("BrandId"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("YearOfFoundation")
+                        .HasColumnType("integer");
+
+                    b.HasKey("BrandId");
+
+                    b.ToTable("Brands");
+                });
+
+            modelBuilder.Entity("clothing_store.Models.Product", b =>
                 {
                     b.Property<int>("ProductId")
                         .ValueGeneratedOnAdd()
@@ -418,6 +418,9 @@ namespace clothing_store.Migrations
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
+
+                    b.Property<decimal?>("DiscountPrice")
+                        .HasColumnType("numeric");
 
                     b.Property<bool>("InStock")
                         .HasColumnType("boolean");
@@ -434,7 +437,13 @@ namespace clothing_store.Migrations
                         .IsRequired()
                         .HasColumnType("text[]");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
+
                     b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TaxId")
                         .HasColumnType("integer");
 
                     b.Property<int>("TimesBought")
@@ -450,7 +459,30 @@ namespace clothing_store.Migrations
 
                     b.HasIndex("BrandId");
 
+                    b.HasIndex("TaxId");
+
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("clothing_store.Models.Tax", b =>
+                {
+                    b.Property<int>("TaxId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TaxId"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("Value")
+                        .HasColumnType("integer");
+
+                    b.HasKey("TaxId");
+
+                    b.ToTable("Taxes");
                 });
 
             modelBuilder.Entity("Account", b =>
@@ -482,14 +514,14 @@ namespace clothing_store.Migrations
 
             modelBuilder.Entity("LinkedFile", b =>
                 {
-                    b.HasOne("clothing_store.Models.Product.Product", null)
+                    b.HasOne("clothing_store.Models.Product", null)
                         .WithMany("PinnedFiles")
                         .HasForeignKey("ProductId");
                 });
 
             modelBuilder.Entity("Opinion", b =>
                 {
-                    b.HasOne("clothing_store.Models.Product.Product", null)
+                    b.HasOne("clothing_store.Models.Product", null)
                         .WithMany("Opinions")
                         .HasForeignKey("ProductId");
                 });
@@ -536,15 +568,23 @@ namespace clothing_store.Migrations
                         .HasForeignKey("AccountId");
                 });
 
-            modelBuilder.Entity("clothing_store.Models.Product.Product", b =>
+            modelBuilder.Entity("clothing_store.Models.Product", b =>
                 {
-                    b.HasOne("Brand", "Brand")
+                    b.HasOne("clothing_store.Models.Brand", "Brand")
                         .WithMany()
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("clothing_store.Models.Tax", "Tax")
+                        .WithMany()
+                        .HasForeignKey("TaxId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Brand");
+
+                    b.Navigation("Tax");
                 });
 
             modelBuilder.Entity("Account", b =>
@@ -554,7 +594,7 @@ namespace clothing_store.Migrations
                     b.Navigation("Orders");
                 });
 
-            modelBuilder.Entity("clothing_store.Models.Product.Product", b =>
+            modelBuilder.Entity("clothing_store.Models.Product", b =>
                 {
                     b.Navigation("Opinions");
 

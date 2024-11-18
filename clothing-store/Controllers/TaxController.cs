@@ -1,56 +1,56 @@
 ﻿using clothing_store.Interfaces;
+using clothing_store.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace clothing_store.Controllers
 {
-    public class AccountController : Controller
+    public class TaxController : Controller
     {
-        private readonly IAccountService _accountService;
-        public AccountController(IAccountService accountService)
+        private readonly ITaxService _taxService;
+        public TaxController(ITaxService taxService)
         {
-            _accountService = accountService;
+            _taxService = taxService;
         }
-        // GET: AccountController
-        public ActionResult Index()
+        // GET: TaxController
+        public async Task<ActionResult> Index()
         {
-            return View();
+            var Taxes = await _taxService.GetAllTaxesAsync();
+            return View(Taxes);
         }
 
-        // GET: AccountController/Details/5
+        // GET: TaxController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: AccountController/Create
+        // GET: TaxController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: AccountController/Create
+        // POST: TaxController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(Tax tax)
         {
-            try
+            if (ModelState.IsValid)
             {
+                await _taxService.AddTaxAsync(tax);
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            return View(tax);
         }
 
-        // GET: AccountController/Edit/5
+        // GET: TaxController/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: AccountController/Edit/5
+        // POST: TaxController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -65,13 +65,13 @@ namespace clothing_store.Controllers
             }
         }
 
-        // GET: AccountController/Delete/5
+        // GET: TaxController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: AccountController/Delete/5
+        // POST: TaxController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

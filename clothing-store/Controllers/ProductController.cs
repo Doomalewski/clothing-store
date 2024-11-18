@@ -1,14 +1,29 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using clothing_store.Interfaces;
+using clothing_store.Models;
+
 
 namespace clothing_store.Controllers
 {
     public class ProductController : Controller
     {
-        // GET: ProductController
-        public ActionResult Index()
+        private readonly IProductService _productService;
+        private readonly ITaxService _taxService;
+        private readonly IBrandService _brandService;
+        public ProductController(IProductService productService,ITaxService taxService, IBrandService brandService)
         {
-            return View();
+            _productService = productService;
+            _taxService = taxService;
+            _brandService = brandService;
+        }
+        // GET: ProductController
+        public async Task<ActionResult> Index()
+        {
+            var Products = await _productService.GetAllProductsAsync();
+            return View(Products);
         }
 
         // GET: ProductController/Details/5
@@ -18,25 +33,61 @@ namespace clothing_store.Controllers
         }
 
         // GET: ProductController/Create
-        public ActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var taxes = await _taxService.GetAllTaxesAsync();
+            var brands = await _brandService.GetAllBrandsAsync();
+            ViewBag.Brands = brands;
+            ViewBag.Taxes = taxes;
+
             return View();
         }
 
-        // POST: ProductController/Create
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+
+        public async Task<IActionResult> Create(ProductCreateDto dto)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                return View(dto);
             }
-            catch
+
+            var tax = await _taxService.GetTaxByIdAsync(dto.TaxId);
+            var brand = await _brandService.GetBrandByIdAsync(dto.BrandId);
+
+            if (brand == null || tax == null)
             {
-                return View();
+                ModelState.AddModelError("", "Wybrany Brand lub Vat nie istnieje.");
+                return View(dto);
             }
+
+            var product = new Product
+            {
+                Name = dto.Name,
+                BrandId = dto.BrandId,
+                Brand = brand,
+                Description = dto.Description,
+                Views = 0,
+                Visible = dto.Visible,
+                Price = dto.Price,
+                Tax = tax,
+                Photos = new List<string>(),
+                PinnedFiles = new List<LinkedFile>(),
+                New = true,
+                TimePosted = DateTime.Now,
+                Quantity = dto.Quantity,
+                TimesBought = 0,
+                Opinions = new List<Opinion>()
+            };
+
+            await _productService.AddProductAsync(product);
+
+            return RedirectToAction("Index");
         }
+
 
         // GET: ProductController/Edit/5
         public ActionResult Edit(int id)

@@ -1,15 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using clothing_store.Interfaces;
+using clothing_store.Models;
+using clothing_store.Services;
+using Microsoft.EntityFrameworkCore;
 
-namespace clothing_store.Models.Product
+namespace clothing_store.Repositories
 {
-    public class ProductRepository
+    public class ProductRepository : IProductRepository
     {
         private readonly StoreDbContext _context;
         public ProductRepository(StoreDbContext context)
         {
             _context = context;
         }
-        public async Task<Product?> GetByIdAsync(int productId)
+        public async Task<Product?> GetProductByIdAsync(int productId)
         {
             if (productId <= 0)
             {
@@ -36,5 +39,18 @@ namespace clothing_store.Models.Product
                 throw new Exception("There was an error while loading product. Contact the admin.");
             }
         }
+        public async Task AddProductAsync(Product product)
+        {
+            await _context.Products.AddAsync(product);
+            await _context.SaveChangesAsync();
+        }
+        public async Task<List<Product>> GetAllProductsAsync()
+        {
+            return await _context.Products
+                .Include(p=>p.Brand)
+                .Include(t=>t.Tax)
+                .ToListAsync();
+        }
+
     }
 }

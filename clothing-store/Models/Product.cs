@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic.FileIO;
+﻿using clothing_store.Models;
+using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +10,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace clothing_store.Models.Product
+namespace clothing_store.Models
 {
     public class Product
     {
@@ -27,7 +28,15 @@ namespace clothing_store.Models.Product
         public string? Description { get; set; }
 
         [Required]
-        public Price Price { get; set; }
+        public decimal Price { get; set; }
+
+        [Range(0, 50000, ErrorMessage = "Discount price must be a positive value, or null if no discount.")]
+        public decimal? DiscountPrice { get; set; }
+        [Required]
+        public int TaxId; 
+        [Required(ErrorMessage = "Tax is required.")]
+        [ForeignKey(nameof(TaxId))]
+        public Tax Tax { get; set; }
 
         public int Views { get; set; }
 
@@ -41,7 +50,8 @@ namespace clothing_store.Models.Product
 
         [Required]
         public bool New { get; set; }
-
+        [Required]
+        public DateTime TimePosted;
         [Required]
         public bool InStock { get; set; }
 

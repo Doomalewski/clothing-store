@@ -5,9 +5,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using clothing_store.Models.Product;
+using clothing_store.Models;
 
-    [NotMapped]
+[NotMapped]
     public class ProductWithQuantity
     {
         [Key]

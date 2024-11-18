@@ -1,56 +1,56 @@
-﻿using clothing_store.Interfaces;
-using Microsoft.AspNetCore.Http;
+﻿using clothing_store.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace clothing_store.Controllers
 {
-    public class AccountController : Controller
+    public class BrandController : Controller
     {
-        private readonly IAccountService _accountService;
-        public AccountController(IAccountService accountService)
+        private readonly StoreDbContext _context;
+        public BrandController(StoreDbContext context)
         {
-            _accountService = accountService;
+            _context = context;
         }
-        // GET: AccountController
-        public ActionResult Index()
+        // GET: BrandController
+        public IActionResult Index()
         {
-            return View();
+            var brands = _context.Brands.ToList();
+            return View(brands);
         }
 
-        // GET: AccountController/Details/5
+        // GET: BrandController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: AccountController/Create
+        // GET: BrandController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: AccountController/Create
+        // POST: BrandController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public IActionResult Create(Brand brand)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                _context.Brands.Add(brand);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
             }
-            catch
-            {
-                return View();
-            }
+            return View(brand);
         }
 
-        // GET: AccountController/Edit/5
+        // GET: BrandController/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: AccountController/Edit/5
+        // POST: BrandController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -65,13 +65,13 @@ namespace clothing_store.Controllers
             }
         }
 
-        // GET: AccountController/Delete/5
+        // GET: BrandController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: AccountController/Delete/5
+        // POST: BrandController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
