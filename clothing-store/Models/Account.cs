@@ -56,9 +56,9 @@ using System.Threading.Tasks;
         [Required(ErrorMessage = "FavouriteColor is required.")]
         public Color FavouriteColor { get; set; }
 
+        public int? AddressId;
+        [ForeignKey(nameof(AddressId))]
         public Address Address { get; set; }
-
-        public Currency PreferredCurrency { get; set; }
 
         public List<SpecialDiscount> Discounts { get; set; }
 

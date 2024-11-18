@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+using clothing_store.Models;
 
-    public class Order
+public class Order
     {
         [Key]
         public int OrderId { get; set; }
@@ -24,7 +25,7 @@ using System.Threading.Tasks;
         [Required]
         public Address Address { get; set; }
 
-        public List<ProductWithQuantity> Products { get; set; } = new();
+        public List<OrderProduct> Products { get; set; } = new();
 
         [Required]
         [Range(0, int.MaxValue, ErrorMessage = "Cena produktów nie może być ujemna.")]

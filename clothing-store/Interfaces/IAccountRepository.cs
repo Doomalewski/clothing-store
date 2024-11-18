@@ -2,8 +2,10 @@
 {
     public interface IAccountRepository
     {
-        public Task<Account> GetAccountAsync(int accountId);
+        public Task<Account> GetAccountByIdAsync(int accountId);
         public Task<List<Account>> GetAllAccountsAsync();
         public Task AddAccountAsync(Account account);
+        public Task DeleteAccountByIdAsync(int id);
+        public Task DeleteAccountAsync(Account account);
     }
 }

@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Delete Account";
+}
+
+<h2>Delete Account</h2>
+
+<p>Are you sure you want to delete your account? Please type "deletenow" to confirm.</p>
+
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        <label for="confirmPhrase">Confirmation Phrase</label>
+        <input type="text" class="form-control" id="confirmPhrase" name="confirmPhrase" />
+        @if (ViewData.ModelState.ContainsKey("confirmPhrase"))
+        {
+            <span class="text-danger">@ViewData.ModelState["confirmPhrase"].Errors[0].ErrorMessage</span>
+        }
+    </div>
+
+    <button type="submit" class="btn btn-danger">Delete Account</button>
+</form>

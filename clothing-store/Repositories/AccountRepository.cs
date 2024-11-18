@@ -7,7 +7,11 @@ namespace clothing_store.Repositories
     public class AccountRepository : IAccountRepository
     {
         private readonly StoreDbContext _context;
-        public async Task<Account> GetAccountAsync(int accountId)
+        public AccountRepository(StoreDbContext context)
+        {
+            _context = context;
+        }
+        public async Task<Account> GetAccountByIdAsync(int accountId)
         {
             return await _context.Accounts.FirstOrDefaultAsync(a => a.AccountId == accountId);
         }
@@ -20,5 +24,17 @@ namespace clothing_store.Repositories
             await _context.AddAsync(account);
             await _context.SaveChangesAsync();
         }
+        public async Task DeleteAccountByIdAsync(int id)
+        {
+            var accountToDelete = _context.Accounts.FirstOrDefaultAsync(a => a.AccountId == id);
+            _context.Remove(accountToDelete);
+            await _context.SaveChangesAsync();
+        }
+        public async Task DeleteAccountAsync(Account account)
+        {
+            _context.Remove(account);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }
