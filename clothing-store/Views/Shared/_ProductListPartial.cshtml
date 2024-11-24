@@ -1,0 +1,33 @@
+﻿@model List<clothing_store.Models.Product>
+
+<div class="product-list">
+    @foreach (var product in Model)
+    {
+        <div class="product-card">
+            @* <img src="@product.ProductId" alt="@product.Name" class="product-image" /> *@
+            <h3>@product.Name</h3>
+            <p class="product-price">
+                @if (product.DiscountPrice.HasValue)
+                {
+                    <span class="discount-price">@product.DiscountPrice zł</span>
+                    <span class="original-price">@product.Price zł</span>
+                }
+                else
+                {
+                    <span>@product.Price zł</span>
+                }
+            </p>
+            @if (!product.InStock)
+            {
+                <p class="out-of-stock">Brak w magazynie</p>
+            }
+            {
+            <!-- Formularz POST do dodania produktu do koszyka -->
+            <form action="@Url.Action("AddProductToCart", "Basket")" method="post">
+                <input type="hidden" name="id" value="@product.ProductId" />
+                <button type="submit" class="add-to-cart">Dodaj do koszyka</button>
+            </form>
+            }
+        </div>
+    }
+</div>

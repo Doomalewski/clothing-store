@@ -15,11 +15,13 @@ namespace clothing_store.Controllers
         private readonly IAccountService _accountService;
         private readonly ICurrencyService _currencyService;
         private readonly IBasketService _basketService;
-        public AccountController(IAccountService accountService,ICurrencyService currencyService,IBasketService basketService)
+        private readonly IProductService _productService;
+        public AccountController(IAccountService accountService,ICurrencyService currencyService,IBasketService basketService,IProductService productService)
         {
             _accountService = accountService;
             _currencyService = currencyService;
             _basketService = basketService;
+            _productService = productService;
         }
         // GET: AccountController
         public ActionResult Index()
@@ -222,6 +224,30 @@ namespace clothing_store.Controllers
 
             // Przekaż dane do widoku
             return View(account);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddProductToCart(int id)
+        {
+            // Pobierz produkt po ID
+            var productToAdd = await _productService.GetProductByIdAsync(id);
+            if (productToAdd == null)
+            {
+                return NotFound(); // Produkt nie istnieje
+            }
+
+            // Pobierz ID zalogowanego użytkownika
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized(); // Brak zalogowanego użytkownika
+            }
+
+            int userId = int.Parse(userIdClaim.Value);
+
+            // Dodaj produkt do koszyka użytkownika
+            await _basketService.AddProductToCartAsync(userId, productToAdd);
+
+            return RedirectToAction("Index","Home"); // Możesz zwrócić inną odpowiedź, np. Redirect
         }
 
 

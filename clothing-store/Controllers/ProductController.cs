@@ -80,6 +80,7 @@ namespace clothing_store.Controllers
                 TimePosted = DateTime.Now,
                 Quantity = dto.Quantity,
                 TimesBought = 0,
+                InStock = true,
                 Opinions = new List<Opinion>()
             };
 

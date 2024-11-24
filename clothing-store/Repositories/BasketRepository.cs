@@ -56,6 +56,45 @@
                     await _context.SaveChangesAsync();
                 }
             }
+            public async Task AddProductToCartAsync(Basket basket, Product product)
+            {
+                // Sprawdź, czy koszyk istnieje
+                if (basket == null)
+                {
+                    throw new ArgumentNullException(nameof(basket), "Koszyk nie może być null.");
+                }
+
+                // Sprawdź, czy produkt istnieje
+                if (product == null)
+                {
+                    throw new ArgumentNullException(nameof(product), "Produkt nie może być null.");
+                }
+
+                // Sprawdź, czy produkt jest już w koszyku
+                var existingBasketProduct = await _context.BasketProducts
+                    .FirstOrDefaultAsync(bp => bp.BasketId == basket.BasketId && bp.ProductId == product.ProductId);
+
+                if (existingBasketProduct != null)
+                {
+                    // Jeśli produkt już jest w koszyku, zwiększ ilość
+                    existingBasketProduct.Quantity += 1;
+                }
+                else
+                {
+                    // Jeśli produkt nie jest w koszyku, dodaj nowy wpis
+                    var productToAdd = new BasketProduct
+                    {
+                        ProductId = product.ProductId,
+                        BasketId = basket.BasketId,
+                        Quantity = 1
+                    };
+                    _context.BasketProducts.Add(productToAdd);
+                }
+
+                // Zapisz zmiany w bazie danych
+                await _context.SaveChangesAsync();
+            }
+
         }
     }
 

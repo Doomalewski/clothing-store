@@ -1,5 +1,6 @@
 ﻿namespace clothing_store.Interfaces
 {
+    using global::clothing_store.Models;
     using System.Threading.Tasks;
 
     namespace clothing_store.Interfaces
@@ -11,6 +12,7 @@
             Task UpdateBasketAsync(Basket basket);
             Task DeleteBasketByIdAsync(int basketId);
             Task DeleteBasketAsync(Basket basket);
+            Task AddProductToCartAsync(int AccountId, Product ProductId);
         }
     }
 

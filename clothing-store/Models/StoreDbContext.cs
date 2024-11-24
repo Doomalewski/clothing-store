@@ -28,6 +28,6 @@ namespace clothing_store.Models
         public virtual DbSet<Opinion> Opinions { get; set; }
         public virtual DbSet<SpecialDiscount> SpecialDiscounts { get; set; }
         public virtual DbSet<Tax> Taxes { get; set; }
-
+        public virtual DbSet<BasketProduct> BasketProducts { get; set; }
     }
 }

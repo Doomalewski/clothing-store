@@ -62,5 +62,7 @@ namespace clothing_store.Models
         public int TimesBought { get; set; }
 
         public List<Opinion> Opinions { get; set; } = new List<Opinion>();
+        public List<BasketProduct> BasketProducts { get; set; } = new List<BasketProduct>();
+
     }
 }

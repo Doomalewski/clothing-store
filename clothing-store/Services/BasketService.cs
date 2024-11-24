@@ -1,6 +1,8 @@
 ﻿namespace clothing_store.Services
 {
+    using global::clothing_store.Interfaces;
     using global::clothing_store.Interfaces.clothing_store.Interfaces;
+    using global::clothing_store.Models;
     using global::clothing_store.Repositories.clothing_store.Repositories;
     using System.Threading.Tasks;
 
@@ -9,10 +11,13 @@
         public class BasketService : IBasketService
         {
             private readonly IBasketRepository _basketRepository;
-
-            public BasketService(IBasketRepository basketRepository)
+            private readonly IAccountRepository _accountRepository;
+            private readonly IProductRepository _productRepository;
+            public BasketService(IBasketRepository basketRepository,IAccountRepository accountRepository, IProductRepository productRepository)
             {
                 _basketRepository = basketRepository;
+                _accountRepository = accountRepository;
+                _productRepository = productRepository;
             }
 
             public async Task<Basket> GetBasketByAccountIdAsync(int accountId)
@@ -35,6 +40,25 @@
                 await _basketRepository.DeleteBasketByIdAsync(basketId);
             }
             public async Task DeleteBasketAsync(Basket basket) => await _basketRepository.DeleteBasketAsync(basket);
+            public async Task AddProductToCartAsync(int accountId, Product product)
+            {
+                // Pobierz użytkownika z bazy danych
+                var user = await _accountRepository.GetAccountByIdAsync(accountId);
+                if (user == null)
+                {
+                    throw new ArgumentException("User do not exist.");
+                }
+                var basket = await _basketRepository.GetBasketByAccountIdAsync(user.AccountId);
+                // Pobierz produkt
+                if (product == null)
+                {
+                    throw new ArgumentException("Product do not exist");
+                }
+
+                // Dodaj produkt do koszyka użytkownika
+                await _basketRepository.AddProductToCartAsync(basket, product);
+            }
+
         }
     }
 
