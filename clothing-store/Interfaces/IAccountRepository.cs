@@ -7,5 +7,6 @@
         public Task AddAccountAsync(Account account);
         public Task DeleteAccountByIdAsync(int id);
         public Task DeleteAccountAsync(Account account);
+        public Task<Account> GetAccountByEmailAsync(string email);
     }
 }

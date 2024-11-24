@@ -1,8 +1,12 @@
 ﻿using clothing_store.Interfaces;
 using clothing_store.Interfaces.clothing_store.Interfaces;
 using clothing_store.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace clothing_store.Controllers
 {
@@ -23,11 +27,6 @@ namespace clothing_store.Controllers
             return View();
         }
 
-        // GET: AccountController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
 
         // GET: AccountController/Create
         public ActionResult Create()
@@ -53,35 +52,28 @@ namespace clothing_store.Controllers
                 ModelState.AddModelError("Email", "Email is already in use.");
                 return View(model);
             }
+            var basket = new Basket();
+
             var account = new Account
             {
                 Username = model.Username,
                 Email = model.Email,
                 Password = _accountService.SaltAndHashPassword(model.Password),
                 Orders = new List<Order>(),
-                Basket = new Basket(),
+                Basket = basket,
                 Name = string.Empty,
                 Surname = string.Empty,
                 Address = null,
                 Discounts = new List<SpecialDiscount>(),
                 CorporateClient = false,
-                Newsletter = false
+                Newsletter = false,
+                Role = "User"
             };
-
-            var basket = new Basket
-            {
-                Account = account,
-                BasketProducts = new List<BasketProduct>()  // Inicjalizacja pustej listy produktów w koszyku
-            };
-
-            // Po zapisaniu koszyka, przypisujemy BasketId do konta
-            account.BasketId = basket.BasketId;
-
             await _accountService.AddAccountAsync(account);
+
 
             return RedirectToAction("Login", "Account");
         }
-        
 
         // GET: AccountController/Edit/5
         public ActionResult Edit(int id)
@@ -104,7 +96,6 @@ namespace clothing_store.Controllers
             }
         }
 
-        // GET: AccountController/Delete/5
         // GET: AccountController/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
@@ -132,14 +123,107 @@ namespace clothing_store.Controllers
                 ModelState.AddModelError("confirmPhrase", "The confirmation phrase is incorrect.");
                 return View(account);
             }
-            var basketToDelete = await _basketService.GetBasketByIdAsync(account.BasketId);
 
-            await _basketService.DeleteBasketAsync(basketToDelete);
             await _accountService.DeleteAccountAsync(account);
 
             // Redirect to a confirmation page or home page after deletion
             return RedirectToAction("Index", "Home");
         }
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View(new LoginViewModel());
+        }
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            // Clear the session
+            HttpContext.Session.Clear();
+
+            // Sign out the user from the authentication system
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            // Redirect to the home page or login page
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var account = await _accountService.GetAccountByEmailAsync(model.Email);
+            if (account == null)
+            {
+                TempData["LoginError"] = "Invalid email or password.";
+                return View(model);
+            }
+
+            bool valid = _accountService.VerifyPassword(account.Password, model.Password);
+            if (!valid)
+            {
+                TempData["LoginError"] = "Invalid email or password.";
+                return View(model);
+            }
+
+            // Set up claims based on the account details
+                    var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, account.Username),
+                new Claim(ClaimTypes.NameIdentifier, account.AccountId.ToString()),
+                new Claim(ClaimTypes.Role, account.Role)  // Add role claim
+            };
+
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            // Sign the user in by setting the authentication cookie
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+            // Redirect based on the role
+            if (account.Role == "Admin")
+            {
+                return RedirectToAction("Dashboard", "Admin");
+            }
+            else if (account.Role == "User")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details()
+        {
+            // Pobierz AccountId z ról lub z claims, jeśli użytkownik jest zalogowany
+            var accountIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+
+            // Sprawdź, czy AccountId jest dostępne w claims
+            if (accountIdClaim == null)
+            {
+                return RedirectToAction("Login", "Account"); // Przekierowanie do logowania, jeśli brak ID
+            }
+
+            // Zamień AccountId na int
+            int accountId = int.Parse(accountIdClaim.Value);
+
+            // Pobierz dane konta na podstawie AccountId
+            var account = await _accountService.GetAccountByIdAsync(accountId);
+
+            // Jeśli konto nie istnieje, zwróć 404
+            if (account == null)
+            {
+                return NotFound();
+            }
+
+            // Przekaż dane do widoku
+            return View(account);
+        }
+
 
     }
 }

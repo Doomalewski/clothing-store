@@ -9,6 +9,8 @@
         public string SaltAndHashPassword(string password);
         public Task DeleteAccountByIdAsync(int id);
         public Task DeleteAccountAsync(Account account);
+        public Task<Account> GetAccountByEmailAsync(string email);
+        public bool VerifyPassword(string hashedPassword, string password);
 
     }
 }

@@ -13,7 +13,14 @@ namespace clothing_store.Repositories
         }
         public async Task<Account> GetAccountByIdAsync(int accountId)
         {
-            return await _context.Accounts.FirstOrDefaultAsync(a => a.AccountId == accountId);
+            var account = await _context.Accounts
+             .Include(a => a.Basket)
+             .Include(a => a.Orders)
+             .Include(a => a.Address)
+             .Include(a => a.Discounts)
+             .FirstOrDefaultAsync(a => a.AccountId == accountId);
+
+            return account; ;
         }
         public async Task<List<Account>> GetAllAccountsAsync()
         {
@@ -34,6 +41,16 @@ namespace clothing_store.Repositories
         {
             _context.Remove(account);
             await _context.SaveChangesAsync();
+        }
+        public async Task<Account> GetAccountByEmailAsync(string email)
+        {
+           var account = await _context.Accounts
+                 .Include(a => a.Basket)
+                 .Include(a => a.Orders)
+                 .Include(a => a.Address)
+                 .Include(a => a.Discounts)
+                 .FirstOrDefaultAsync(a => a.Email == email);
+            return account;
         }
 
     }

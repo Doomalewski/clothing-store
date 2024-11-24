@@ -41,5 +41,9 @@ namespace clothing_store.Services
         }
         public async Task DeleteAccountByIdAsync(int id) => await _accountRepository.DeleteAccountByIdAsync(id);
         public async Task DeleteAccountAsync(Account account) => await _accountRepository.DeleteAccountAsync(account);
+        public async Task<Account> GetAccountByEmailAsync(string email)
+        {
+            return await _accountRepository.GetAccountByEmailAsync(email);
+        }
     }
 }

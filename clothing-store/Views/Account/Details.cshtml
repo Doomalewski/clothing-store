@@ -1,0 +1,77 @@
+﻿@model Account
+
+@{
+    ViewData["Title"] = "Szczegóły konta";
+}
+
+<style>
+    .card-body dt, .card-body dd {
+        color: black; /* Ustaw kolor na czarny */
+    }
+</style>
+
+<h2>Szczegóły konta</h2>
+
+<div class="card">
+    <div class="card-header">
+        <h4>@Model.Username</h4>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-4">Imię</dt>
+            <dd class="col-sm-8">@Model.Name</dd>
+
+            <dt class="col-sm-4">Nazwisko</dt>
+            <dd class="col-sm-8">@Model.Surname</dd>
+
+            <dt class="col-sm-4">Email</dt>
+            <dd class="col-sm-8">@Model.Email</dd>
+
+            <dt class="col-sm-4">Rola</dt>
+            <dd class="col-sm-8">@Model.Role</dd>
+
+            <dt class="col-sm-4">Wiek</dt>
+            <dd class="col-sm-8">@Model.Age</dd>
+
+            <dt class="col-sm-4">Płeć</dt>
+            <dd class="col-sm-8">@((Model.Sex) ? "Mężczyzna" : "Kobieta")</dd>
+
+            <dt class="col-sm-4">Wzrost</dt>
+            <dd class="col-sm-8">@Model.Height cm</dd>
+
+            <dt class="col-sm-4">Waga</dt>
+            <dd class="col-sm-8">@Model.Weight kg</dd>
+
+            <dt class="col-sm-4">Ulubiony kolor</dt>
+            <dd class="col-sm-8">@Model.FavouriteColor</dd>
+
+            <dt class="col-sm-4">Newsletter</dt>
+            <dd class="col-sm-8">@((Model.Newsletter) ? "Zapisany" : "Nie zapisany")</dd>
+
+            <dt class="col-sm-4">Klient korporacyjny</dt>
+            <dd class="col-sm-8">@((Model.CorporateClient) ? "Tak" : "Nie")</dd>
+
+            <dt class="col-sm-4">Adres</dt>
+            <dd class="col-sm-8">
+                @if (Model.Address != null)
+                {
+                    <p>@Model.Address.Street, @Model.Address.City</p>
+                }
+                else
+                {
+                    <p>Brak przypisanego adresu</p>
+                }
+            </dd>
+        </dl>
+    </div>
+    <div class="card-footer">
+        <a asp-action="Edit" asp-route-id="@Model.AccountId" class="btn btn-primary">Edytuj</a>
+        <a asp-action="Delete" asp-route-id="@Model.AccountId" class="btn btn-danger">Usuń</a>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Powrót</a>
+
+        <!-- Logout Form -->
+        <form asp-action="Logout" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-danger">Wyloguj</button>
+        </form>
+    </div>
+</div>

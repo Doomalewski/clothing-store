@@ -26,10 +26,8 @@ using System.Threading.Tasks;
         [Required(ErrorMessage = "Password is required.")]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters long.")]
         public string Password { get; set; }
+        public string Role { get; set; }
 
-        public int BasketId;
-
-        [ForeignKey(nameof(BasketId))]
         public Basket Basket { get; set; }
 
         public List<Order> Orders { get; set; }

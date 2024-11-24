@@ -20,7 +20,7 @@
             {
                 var basket = await _context.Baskets
                     .Include(b => b.BasketProducts)
-                    .Include(b=>b.AccountId)
+                    .Include(b=>b.Account)
                     .FirstOrDefaultAsync(b => b.AccountId == accountId);
 
                 return basket;

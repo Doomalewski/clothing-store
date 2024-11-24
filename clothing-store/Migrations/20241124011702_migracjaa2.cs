@@ -5,25 +5,25 @@
 namespace clothing_store.Migrations
 {
     /// <inheritdoc />
-    public partial class migraccjajacjacj : Migration
+    public partial class migracjaa2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "AccountId",
-                table: "Baskets",
-                type: "integer",
+            migrationBuilder.AddColumn<string>(
+                name: "Role",
+                table: "Accounts",
+                type: "text",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: "");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "AccountId",
-                table: "Baskets");
+                name: "Role",
+                table: "Accounts");
         }
     }
 }

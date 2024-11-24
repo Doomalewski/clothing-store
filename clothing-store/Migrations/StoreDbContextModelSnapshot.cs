@@ -37,9 +37,6 @@ namespace clothing_store.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("integer");
 
-                    b.Property<int>("BasketId")
-                        .HasColumnType("integer");
-
                     b.Property<bool>("CorporateClient")
                         .HasColumnType("boolean");
 
@@ -67,6 +64,10 @@ namespace clothing_store.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<bool>("Sex")
                         .HasColumnType("boolean");
 
@@ -86,8 +87,6 @@ namespace clothing_store.Migrations
                     b.HasKey("AccountId");
 
                     b.HasIndex("AddressId");
-
-                    b.HasIndex("BasketId");
 
                     b.ToTable("Accounts");
                 });
@@ -141,6 +140,9 @@ namespace clothing_store.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("BasketId");
+
+                    b.HasIndex("AccountId")
+                        .IsUnique();
 
                     b.ToTable("Baskets");
                 });
@@ -547,15 +549,18 @@ namespace clothing_store.Migrations
                         .WithMany()
                         .HasForeignKey("AddressId");
 
-                    b.HasOne("Basket", "Basket")
-                        .WithMany()
-                        .HasForeignKey("BasketId")
+                    b.Navigation("Address");
+                });
+
+            modelBuilder.Entity("Basket", b =>
+                {
+                    b.HasOne("Account", "Account")
+                        .WithOne("Basket")
+                        .HasForeignKey("Basket", "AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Address");
-
-                    b.Navigation("Basket");
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("LinkedFile", b =>
@@ -673,6 +678,9 @@ namespace clothing_store.Migrations
 
             modelBuilder.Entity("Account", b =>
                 {
+                    b.Navigation("Basket")
+                        .IsRequired();
+
                     b.Navigation("Discounts");
 
                     b.Navigation("Orders");

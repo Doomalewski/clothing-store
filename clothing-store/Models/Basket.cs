@@ -15,7 +15,7 @@ using clothing_store.Models;
 
         public int AccountId { get; set; }
         [ForeignKey(nameof(AccountId))]
-        public Account Account;
+        public Account Account { get; set; }
         public List<BasketProduct> BasketProducts { get; set; }
     }
 
