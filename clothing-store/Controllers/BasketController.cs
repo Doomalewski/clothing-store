@@ -11,6 +11,27 @@ namespace clothing_store.Controllers
         {
             _basketService = basketService;
         }
+        
+        public IActionResult Checkout()
+        {
+            return View();
+        }
+        
+        [HttpPost]
+        public IActionResult ProcessCheckout(string fullName, string email, string address, string city, string postalCode, string phoneNumber, string paymentMethod)
+        {
+            if (ModelState.IsValid)
+            {
+                // Process the order (e.g., save to database, send email, etc.)
+
+                // Redirect to the main page after successfully placing the order
+                return RedirectToAction("Index", "Home");
+            }
+
+            // If the form submission is invalid, return the same checkout view
+            TempData["Error"] = "There was an issue with your order. Please check your input and try again.";
+            return View("Checkout");
+        }
         public async Task<IActionResult> Index()
         {
             var accountIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
@@ -26,4 +47,6 @@ namespace clothing_store.Controllers
             return View(items);
         }
     }
+    
+    
 }

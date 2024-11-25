@@ -4,56 +4,93 @@
     ViewData["Title"] = "Your Shopping Cart";
 }
 
-<h2>Your Shopping Cart</h2>
+<div class="container mt-5">
+    <div class="row">
+        <!-- Continue Shopping Link -->
+        <div class="col-12 mb-3">
+            <a asp-action="Index" asp-controller="Shop" class="text-decoration-none text-white">
+                ← Continue Shopping
+            </a>
+        </div>
+    </div>
 
-@if (Model.BasketProducts == null || !Model.BasketProducts.Any())
-{
-    <p>Your cart is empty.</p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Total</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.BasketProducts)
-            {
-                <tr>
-                    <td>@item.Product.Name</td>
-                    <td>@item.Product.Price.ToString("C")</td>
-                    <td>
-                        <form asp-action="UpdateCart" method="post">
-                            <input type="hidden" name="ProductId" value="@item.ProductId" />
-                            <input type="number" name="Quantity" value="@item.Quantity" min="1" class="form-control" style="width: 70px;" />
-                            <button type="submit" class="btn btn-primary btn-sm">Update</button>
-                        </form>
-                    </td>
-                    <td>@(item.Product.Price * item.Quantity)</td>
-                    <td>
-                        <form asp-action="RemoveFromCart" method="post">
-                            <input type="hidden" name="ProductId" value="@item.ProductId" />
-                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
-                        </form>
-                    </td>
-                </tr>
-            }
-        </tbody>
-        <tfoot>
-            <tr>
-                <td colspan="3"><strong>Total</strong></td>
-                <td colspan="2">Tutaj cena calkowita</td>
-            </tr>
-        </tfoot>
-    </table>
+    <!-- Cart Title -->
+    <h1 class="text-center text-white mb-4" style="font-weight: bold;">The Shop</h1>
 
-    <p>
-        <a asp-action="Checkout" class="btn btn-success">Proceed to Checkout</a>
-    </p>
-}
+    @if (Model.BasketProducts == null || !Model.BasketProducts.Any())
+    {
+        <p class="text-center text-white">Your cart is empty.</p>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Cart Items -->
+                @foreach (var item in Model.BasketProducts)
+                {
+                    <div class="mb-4 p-3 rounded shadow-lg" style="background-color: #000;">
+                        <div class="row align-items-center">
+                            <!-- Product Image -->
+                            <div class="col-md-3">
+                        
+                            </div>
+
+                            <!-- Product Details -->
+                            <div class="col-md-5">
+                                <h4 class="text-white">@item.Product.Name</h4>
+                                <p class="text-muted">@item.Product.Description</p>
+                                <p>
+                                    <label for="Option-@item.ProductId" class="form-label">Option</label>
+                                    <select id="Option-@item.ProductId" class="form-select bg-dark text-white">
+                                        
+                                        <!-- Additional options can be added dynamically here -->
+                                    </select>
+                                </p>
+                            </div>
+
+                            <!-- Quantity and Actions -->
+                            <div class="col-md-2 text-center">
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <form asp-action="UpdateCart" method="post" class="d-inline">
+                                        <input type="hidden" name="ProductId" value="@item.ProductId" />
+                                        <button type="submit" name="action" value="decrement" class="btn btn-outline-light btn-sm">-</button>
+                                        <span class="mx-2 text-white">@item.Quantity</span>
+                                        <button type="submit" name="action" value="increment" class="btn btn-outline-light btn-sm">+</button>
+                                    </form>
+                                </div>
+                                <p class="text-white mt-2">@item.Product.Price.ToString("C")</p>
+                            </div>
+
+                            <!-- Remove Item -->
+                            <div class="col-md-2 text-center">
+                                <form asp-action="RemoveFromCart" method="post">
+                                    <input type="hidden" name="ProductId" value="@item.ProductId" />
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Summary Section -->
+            <div class="col-lg-4">
+                <div class="p-3 rounded shadow-lg" style="background-color: #000;">
+                    <h4 class="text-white">Summary</h4>
+                    <p class="text-white">Shipping, taxes, and discounts calculated at checkout.</p>
+                    <hr class="text-white" />
+                    <div class="d-flex justify-content-between">
+                        <span class="text-white">Subtotal:</span>
+                        <span class="text-white">@Model.BasketProducts.Sum(item => item.Product.Price * item.Quantity).ToString("C")</span>
+                    </div>
+                    <hr class="text-white" />
+                    <div class="text-center mt-4">
+                        <a asp-action="Checkout" class="btn btn-success btn-lg w-100">Checkout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

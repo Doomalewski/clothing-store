@@ -2,5 +2,56 @@
     ViewData["Title"] = "Checkout";
 }
 
-<h2>Checkout</h2>
+<div class="container mt-5">
+    <h1 class="text-center text-white mb-4" style="font-weight: bold;">Checkout</h1>
 
+    <div class="p-4 rounded shadow-lg" style="background-color: #000; color: #fff; max-width: 600px; margin: 0 auto;">
+        <h3 class="text-white mb-3" style="font-weight: bold;">Billing Information</h3>
+        <form asp-action="ProcessCheckout" method="post">
+            <div class="mb-3">
+                <label for="FullName" class="form-label" style="font-weight: bold;">Full Name</label>
+                <input type="text" id="FullName" name="FullName" class="form-control bg-dark text-white" placeholder="Enter your full name" required />
+            </div>
+            <div class="mb-3">
+                <label for="Email" class="form-label" style="font-weight: bold;">Email</label>
+                <input type="email" id="Email" name="Email" class="form-control bg-dark text-white" placeholder="Enter your email" required />
+            </div>
+            <div class="mb-3">
+                <label for="Address" class="form-label" style="font-weight: bold;">Address</label>
+                <input type="text" id="Address" name="Address" class="form-control bg-dark text-white" placeholder="Enter your address" required />
+            </div>
+            <div class="mb-3">
+                <label for="City" class="form-label" style="font-weight: bold;">City</label>
+                <input type="text" id="City" name="City" class="form-control bg-dark text-white" placeholder="Enter your city" required />
+            </div>
+            <div class="mb-3">
+                <label for="PostalCode" class="form-label" style="font-weight: bold;">Postal Code</label>
+                <input type="text" id="PostalCode" name="PostalCode" class="form-control bg-dark text-white" placeholder="Enter your postal code" required />
+            </div>
+            <div class="mb-4">
+                <label for="PhoneNumber" class="form-label" style="font-weight: bold;">Phone Number</label>
+                <input type="tel" id="PhoneNumber" name="PhoneNumber" class="form-control bg-dark text-white" placeholder="Enter your phone number" required />
+            </div>
+
+            <h3 class="text-white mb-3" style="font-weight: bold;">Payment Method</h3>
+            <div class="mb-3">
+                <div class="form-check">
+                    <input type="radio" id="CreditCard" name="PaymentMethod" value="CreditCard" class="form-check-input" required />
+                    <label for="CreditCard" class="form-check-label">Credit Card</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" id="PayPal" name="PaymentMethod" value="PayPal" class="form-check-input" />
+                    <label for="PayPal" class="form-check-label">PayPal</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" id="CashOnDelivery" name="PaymentMethod" value="CashOnDelivery" class="form-check-input" />
+                    <label for="CashOnDelivery" class="form-check-label">Cash on Delivery</label>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-success btn-lg w-100">Place Order</button>
+            </div>
+        </form>
+    </div>
+</div>
