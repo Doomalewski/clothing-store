@@ -3,12 +3,10 @@
 @{
     ViewData["Title"] = "Home Page";
 }
-<header class="banner">
-    <a class="banner-content">
-        <h2>Przeglądaj ze zniżką -40% kod:"BLACK"</h2>
-    </a>
-
-</header>
+    <div class="baner">
+        <img src="~/Images/edzio.jpg" alt="Zdjęcie banera">
+        <h1>PROMOCJE</h1>
+    </div>
 <div id="product-section">
     @await Html.PartialAsync("_ProductListPartial", Model)
 </div>

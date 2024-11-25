@@ -18,126 +18,122 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
-  background-color: #000;
-  color:#fff
 }
-.navbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 0px;
+
+.navgrid {
+    display: grid;
+    width:100%;
+    grid-template-columns: repeat(12, 1fr); /* 12 kolumn */
+    gap: 15px; /* Odstêpy miêdzy elementami */
     background-color: #000;
+    height: 50px;
 }
 
-    .navbar ul {
-        display: flex;
-        list-style-type: none;
-        padding-inline-start:0px;
+    .navgrid a:nth-child(1) {
+        grid-column: 1
     }
 
-        .navbar ul li {
-            margin: 0 10px;
-        }
-
-            .navbar ul li a {
-                text-decoration: none;
-                color: #fff;
-                font-size: 14px;
-                letter-spacing: 1px;
-            }
-
-.logo {
-    flex-grow: 1;
-    text-align: center;
-}
-
-    .logo img {
-        height: 70px; /* Dopasuj rozmiar logo */
-        width: auto;
-    }
-.banner {
-    width: 98%;
-    margin: 0 auto; /* Wyœrodkowanie banera */
-    height: 400px;
-    background: url('https://picsum.photos/2000/400') no-repeat center center/cover;
-    display: flex;
-    position: center;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    transition: transform 0.5s ease, background-size 0.5s ease;
-    margin-top:50px;
-}
-
-    /* Efekt powiêkszenia t³a przy hover */
-    .banner:hover {
-        transform: scale(1.02); /* Delikatne powiêkszenie banera */
+    .navgrid a:nth-child(2) {
+        grid-column: 2
     }
 
-/* Efekt przejœcia dla zawartoœci banera */
-.banner-content {
-    color: #fff;
-    text-align: center;
-    z-index: 1;
-    transition: color 0.5s, transform 0.5s ease;
-}
+    .navgrid a:nth-child(3) {
+        grid-column: 3
+    }
 
-/* Efekt hover - zmiana koloru i rozmiaru tekstu */
-.banner:hover .banner-content {
-    transform: scale(1.1); /* Powiêkszenie tekstu */
-}
+    .navgrid a:nth-child(4) {
+        grid-column: 10
+    }
 
-/* Pó³przezroczysta warstwa na tle */
-.banner::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.3); /* Przyciemnia t³o */
-    transition: background 0.5s ease;
-}
+    .navgrid a:nth-child(5) {
+        grid-column: 11
+    }
 
-/* Efekt hover - rozjaœnienie t³a */
-.banner:hover::after {
-    background: rgba(255, 255, 255, 0.1); /* Rozjaœnia t³o */
-}
-.banner-content {
-    position: relative;
-    color: #fff;
-    text-align: center;
-    z-index: 1;
-}
+    .navgrid a:nth-child(6) {
+        grid-column: 12
+    }
 
-.banner h2 {
-    font-size: 2rem;
-    margin-bottom: 10px;
-    padding:10px;
-    background-color:#000;
-    border-radius:10px;
-}
-
-.banner p {
-    font-size: 1.2rem;
-    margin-bottom: 20px;
-}
-
-.banner-btn {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #ff6347;
-    color: #fff;
+a {
     text-decoration: none;
-    font-weight: bold;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+    text-align: center;
+    padding-top: 15px;
+    padding-left: 20px;
+    padding-right: 20px;
+    color: white;
+    border-radius: 4px;
 }
 
-    .banner-btn:hover {
-        background-color: #ff4500;
+.baner {
+    width: 100%; /* Pe³na szerokoœæ strony */
+    height: 300px; /* Wysokoœæ 300px */
+    overflow: hidden; /* Ukrycie nadmiaru zdjêcia */
+    position: relative; /* Aby efekt dzia³a³ poprawnie */
+    transition: background 0.3s ease-in-out; /* P³ynna zmiana gradientu przy najechaniu */
+}
+
+    .baner img {
+        width: 100%; /* Dopasowanie do szerokoœci */
+        height: 150%; /* Dopasowanie do wysokoœci */
+        object-fit: cover; /* Dopasowanie obrazu bez zmiany proporcji */
+        transition: transform 0.3s ease-in-out; /* P³ynna animacja zooma */
     }
+
+    .baner:hover img {
+        transform: scale(1.1); /* Powiêkszenie zdjêcia przy najechaniu */
+    }
+
+    .baner h1 {
+        position: absolute; /* Pozycjonowanie nag³ówka nad obrazkiem */
+        top: 35%; /* Wyœrodkowanie w pionie */
+        left: 50%; /* Wyœrodkowanie w poziomie */
+        transform: translate(-50%, -50%); /* W³aœciwe wyœrodkowanie */
+        color: white; /* Kolor tekstu */
+        font-size: 3rem; /* Rozmiar czcionki */
+        font-weight: bold; /* Pogrubienie tekstu */
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Cieñ tekstu */
+    }
+
+.product-card {
+    width: 200px;
+    height: 250px;
+    background-color: #fff;
+    border-radius: 15px; /* Zaokr¹glone rogi */
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+}
+
+.product-image {
+    width: 100%;
+    height: 70%; /* Zajmuje górn¹ po³owê karty */
+    object-fit: cover;
+}
+
+.product-info {
+    padding: 5px;
+    text-align: center;
+}
+
+.product-name {
+    font-size: 25px;
+    font-weight: bold;
+    margin: 0;
+    color: #333;
+}
+
+.product-price {
+    font-size: 30px;
+    margin: 5px;
+    color: #777;
+}
+
+.product-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Odstêpy miêdzy kartami */
+}
 footer {
     background-color: #111;
     color: #888;

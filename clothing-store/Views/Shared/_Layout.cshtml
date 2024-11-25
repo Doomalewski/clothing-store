@@ -10,26 +10,19 @@
 </head>
 <body>
     <header>
-        <nav class="navbar">
-            <ul class="nav-left">
-                <li><a asp-controller="Home"asp-action="Index">SKLEP</a></li>
-                <li><a href="#">BUTY</a></li>
-                <li><a href="#">PROMOCJE</a></li>
-            </ul>
-
-            <div class="logo">
-                <a asp-controller="Home" asp-action="Index"><img src="~/Images/logo.png"></a>
-            </div>
-
-            <ul class="nav-right">
-                <li><a href="#">PLN</a></li>
-                <li><a href="#">SZUKAJ</a></li
-                <li><a asp-controller="Account" asp-action="Details">KONTO</a></li>
-                <li><a href="#">KOSZYK 0</a></li>
-            </ul>
+        <nav class="navgrid">
+            <a asp-controller="Home" asp-action="Index">Sklep</a>
+            <a asp-controller="Home" asp-action="Index">Sale</a>
+            <a asp-controller="Home" asp-action="Index">PLN</a>
+            <a asp-controller="Account" asp-action="Details">Konto</a>
+            <a asp-controller="Home" asp-action="Index"> Szukaj</a>
+            <a asp-controller="Basket" asp-action="Index">Koszyk</a>
         </nav>
+
+        
+                
     </header>
-    <div class="container">
+    <div>
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
