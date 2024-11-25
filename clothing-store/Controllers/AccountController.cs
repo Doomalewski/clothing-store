@@ -249,7 +249,10 @@ namespace clothing_store.Controllers
 
             return RedirectToAction("Index","Home"); // Możesz zwrócić inną odpowiedź, np. Redirect
         }
-
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
 
     }
 }

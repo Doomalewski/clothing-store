@@ -3,10 +3,11 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - clothing_store</title>
+    <title>Clothing Store-@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-     <link rel="stylesheet" href="~/clothing_store.styles.css" asp-append-version="true" /> 
+     <link rel="stylesheet" href="~/clothing_store.styles.css" asp-append-version="true" />
+    <link rel="icon" href="/favicon.jpg" type="image/x-icon">
 </head>
 <body>
     <header>
@@ -14,9 +15,9 @@
             <a asp-controller="Home" asp-action="Index">Sklep</a>
             <a asp-controller="Home" asp-action="Index">Sale</a>
             <a asp-controller="Home" asp-action="Index">PLN</a>
-            <a asp-controller="Account" asp-action="Details">Konto</a>
             <a asp-controller="Home" asp-action="Index"> Szukaj</a>
             <a asp-controller="Basket" asp-action="Index">Koszyk</a>
+            <a asp-controller="Account" asp-action="Details">Konto</a>
         </nav>
 
         

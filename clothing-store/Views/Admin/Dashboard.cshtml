@@ -2,42 +2,47 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<h2>Panel Administratora</h2>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 text-center">
+            <h2 class="text-white mb-4" style="font-weight: bold;">Panel Administratora</h2>
+        </div>
 
-<div class="container mt-4">
-    <div class="row">
+        <!-- Dodaj produkt -->
         <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <h4>Dodaj produkt</h4>
+            <div class="card shadow-lg border-0" style="background-color: #000; color: #fff;">
+                <div class="card-header text-center" style="background-color: #000; border-bottom: 1px solid #444;">
+                    <h5 class="mb-0">Dodaj produkt</h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body text-center">
                     <p>Dodaj nowy produkt do sklepu.</p>
-                    <a asp-controller="Product" asp-action="Create" class="btn btn-primary">Dodaj produkt</a>
+                    <a asp-controller="Product" asp-action="Create" class="btn btn-light w-100">Dodaj produkt</a>
                 </div>
             </div>
         </div>
 
+        <!-- Zarządzaj użytkownikami -->
         <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <h4>Zarządzaj użytkownikami</h4>
+            <div class="card shadow-lg border-0" style="background-color: #000; color: #fff;">
+                <div class="card-header text-center" style="background-color: #000; border-bottom: 1px solid #444;">
+                    <h5 class="mb-0">Zarządzaj użytkownikami</h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body text-center">
                     <p>Przeglądaj, edytuj lub usuwaj użytkowników.</p>
-                    <a asp-controller="Admin" asp-action="Index" class="btn btn-secondary">Zarządzaj użytkownikami</a>
+                    <a asp-controller="Admin" asp-action="Index" class="btn btn-light w-100">Zarządzaj użytkownikami</a>
                 </div>
             </div>
         </div>
 
+        <!-- Zarządzaj zamówieniami -->
         <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <h4>Zamówienia</h4>
+            <div class="card shadow-lg border-0" style="background-color: #000; color: #fff;">
+                <div class="card-header text-center" style="background-color: #000; border-bottom: 1px solid #444;">
+                    <h5 class="mb-0">Zamówienia</h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body text-center">
                     <p>Przeglądaj i zarządzaj zamówieniami klientów.</p>
-                    <a asp-controller="Order" asp-action="Index" class="btn btn-success">Zarządzaj zamówieniami</a>
+                    <a asp-controller="Order" asp-action="Index" class="btn btn-light w-100">Zarządzaj zamówieniami</a>
                 </div>
             </div>
         </div>
