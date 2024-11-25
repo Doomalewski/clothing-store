@@ -1,4 +1,5 @@
-﻿using System;
+﻿using clothing_store.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;

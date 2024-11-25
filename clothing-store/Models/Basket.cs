@@ -6,7 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using clothing_store.Models;
-
+namespace clothing_store.Models
+{
     public class Basket
     {
         [Key]
@@ -18,4 +19,4 @@ using clothing_store.Models;
         public Account Account { get; set; }
         public List<BasketProduct> BasketProducts { get; set; }
     }
-
+}

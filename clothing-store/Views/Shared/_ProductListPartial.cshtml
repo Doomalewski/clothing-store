@@ -10,7 +10,11 @@
                     <h3 class="product-name">@product.Name</h3>
                     <p class="product-price">@product.Price</p>
                 </div>
-            </div>
+            <form asp-controller="Account" asp-action="AddProductToCart" method="post">
+                <input type="hidden" name="id" value="@product.ProductId" />
+                <button type="submit" style="color:black;">Buy</button>
+            </form>
+        </div>
 
     }
 </div>
