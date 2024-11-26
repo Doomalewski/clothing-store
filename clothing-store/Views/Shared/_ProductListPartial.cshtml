@@ -1,14 +1,14 @@
-﻿@model List<clothing_store.Models.Product>
+﻿@model List<clothing_store.ViewModels.ProductViewModel>
 
 <div class="product-container">
     @foreach (var product in Model)
     {
 
             <div class="product-card">
-                <img src="hq720.jpeg" alt="Product Image" class="product-image">
+                <img src="~/Images/edzio.jpg" alt="Product Image" class="product-image">
                 <div class="product-info">
                     <h3 class="product-name">@product.Name</h3>
-                    <p class="product-price">@product.Price</p>
+                <p class="product-price">@product.ConvertedPrice @product.Currency.Code</p>
                 </div>
             <form asp-controller="Account" asp-action="AddProductToCart" method="post">
                 <input type="hidden" name="id" value="@product.ProductId" />

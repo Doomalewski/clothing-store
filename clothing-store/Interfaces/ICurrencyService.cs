@@ -5,7 +5,8 @@ namespace clothing_store.Interfaces
     public interface ICurrencyService
     {
         Task UpdateCurrencyRatesAsync();
-        decimal GetRate(string currencyCode);
+        Task<decimal> GetRateAsync(string currencyCode);
+        Task<List<Currency>> GetAllCurrenciesAsync();
     }
 
 }

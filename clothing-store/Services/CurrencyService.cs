@@ -1,6 +1,7 @@
 ﻿using clothing_store.Interfaces;
 using clothing_store.Models;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Text.Json;
 
 namespace clothing_store.Services
@@ -15,57 +16,86 @@ namespace clothing_store.Services
             _currencyRepository = currencyRepository;
         }
 
-        // Pobranie kursów walut z API NBP i zapisanie w bazie danych
         public async Task UpdateCurrencyRatesAsync()
         {
-            var response = await _httpClient.GetStringAsync("https://api.nbp.pl/api/exchangerates/tables/A?format=json");
-            var rates = JsonSerializer.Deserialize<List<NbpExchangeRateTable>>(response);
-
-            if (rates != null && rates.Count > 0)
+            try
             {
-                var currencies = MapToCurrencies(rates[0].Rates);
+                var response = await _httpClient.GetStringAsync("https://api.nbp.pl/api/exchangerates/tables/A?format=json");
+                Console.WriteLine(response);
+                if (string.IsNullOrEmpty(response))
+                {
+                    throw new InvalidOperationException("API response is empty or null.");
+                }
 
-                // Zapisz wszystkie kursy walut do bazy danych
-                await _currencyRepository.SaveCurrenciesAsync(currencies);
+                // Deserializacja odpowiedzi JSON
+                var rates = JsonConvert.DeserializeObject<List<NbpExchangeRateTable>>(response);
+
+                if (rates == null || rates.Count == 0)
+                {
+                    throw new InvalidOperationException("No exchange rate data found.");
+                }
+
+                // Filtrowanie tylko interesujących walut
+                var filteredRates = rates[0].Rates?.Where(rate =>
+                    new[] { "USD", "EUR", "GBP", "JPY" }.Contains(rate.Code)).ToList();
+
+                if (filteredRates == null || filteredRates.Count == 0)
+                {
+                    throw new InvalidOperationException("No relevant exchange rates found.");
+                }
+
+                var currencies = MapToCurrencies(filteredRates);
+
+                // Zapisz wybrane kursy walut do bazy danych
+                await _currencyRepository.UpdateCurrenciesAsync(currencies);
+            }
+            catch (Exception ex)
+            {
+                // Logowanie lub obsługa błędów
+                Console.WriteLine($"Error updating currency rates: {ex.Message}");
+                throw;  // Zgłoś błąd dalej, aby móc go przechwycić w innych częściach aplikacji, jeśli potrzebujesz
             }
         }
 
-        // Mapowanie danych z API na naszą reprezentację waluty
-        private List<Currency> MapToCurrencies(List<NbpRate> nbpRates)
+        // Metoda mapująca dane z API na DTO
+        public List<CurrencyDto> MapToCurrencies(IEnumerable<Rate> rates)
         {
-            var currencies = new List<Currency>();
-
-            foreach (var rate in nbpRates)
+            return rates.Select(rate => new CurrencyDto
             {
-                currencies.Add(new Currency
-                {
-                    Name = rate.Currency,
-                    Code = rate.Code,
-                    Rate = rate.Mid // Kurs średni
-                });
-            }
-
-            return currencies;
+                Name = rate.Currency,
+                Code = rate.Code,
+                Rate = rate.Mid
+            }).ToList();
         }
 
         // Pobieranie kursu dla wybranej waluty z repozytorium
-        public decimal GetRate(string currencyCode)
+        public async Task<decimal> GetRateAsync(string currencyCode)
         {
-            var currency = _currencyRepository.GetCurrencyByCodeAsync(currencyCode).Result;
+            var currency = await _currencyRepository.GetCurrencyByCodeAsync(currencyCode);
             return currency?.Rate ?? 1; // Domyślnie PLN
         }
-    }
-        public class NbpExchangeRateTable
-        {
-            public string No { get; set; } // Numer tabeli, np. "A123/2024"
-            public DateTime EffectiveDate { get; set; } // Data, na którą kursy są ważne
-            public List<NbpRate> Rates { get; set; } // Lista kursów walut
-        }
 
-        public class NbpRate
+        // Pobieranie wszystkich walut z repozytorium
+        public async Task<List<Currency>> GetAllCurrenciesAsync()
         {
-            public string Currency { get; set; } // Nazwa waluty, np. "dolar amerykański"
-            public string Code { get; set; } // Kod waluty, np. "USD"
-            public decimal Mid { get; set; } // Kurs średni waluty
+            return await _currencyRepository.GetAllCurrenciesAsync();
         }
     }
+
+    // Klasa reprezentująca odpowiedź z API
+    public class NbpExchangeRateTable
+    {
+        public string Table { get; set; }
+        public string No { get; set; }
+        public string EffectiveDate { get; set; }
+        public List<Rate> Rates { get; set; }  // Lista walut
+    }
+
+    // Klasa reprezentująca szczegóły kursu waluty
+    public class Rate
+    {
+        public string Currency { get; set; } // np. "bat (Tajlandia)"
+        public string Code { get; set; }     // np. "THB"
+        public decimal Mid { get; set; }     // np. 0.1184
+    }
+}

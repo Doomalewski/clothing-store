@@ -29,6 +29,41 @@ namespace clothing_store.Repositories
             _context.Currencies.AddRange(currencies);
             await _context.SaveChangesAsync();
         }
+        public async Task UpdateCurrenciesAsync(List<CurrencyDto> currencies)
+        {
+            // Pobranie istniejących walut z bazy danych
+            var existingCurrencies = await _context.Currencies
+                .Where(c => currencies.Select(cur => cur.Code).Contains(c.Code))
+                .ToListAsync();
+
+            foreach (var currency in currencies)
+            {
+                var existingCurrency = existingCurrencies.FirstOrDefault(c => c.Code == currency.Code);
+
+                if (existingCurrency != null)
+                {
+                    // Zaktualizowanie istniejącej waluty
+                    existingCurrency.Rate = currency.Rate;
+                    existingCurrency.LastUpdated = DateTime.UtcNow;
+                }
+                else
+                {
+                    // Dodanie nowej waluty
+                    var newCurrency = new Currency
+                    {
+                        Name = currency.Name,
+                        Code = currency.Code,
+                        Rate = currency.Rate,
+                        LastUpdated = DateTime.UtcNow
+                    };
+
+                    _context.Currencies.Add(newCurrency);
+                }
+            }
+
+            // Zapisanie zmian w bazie danych
+            await _context.SaveChangesAsync();
+        }
 
         public async Task<List<Currency>> GetAllCurrenciesAsync()
         {

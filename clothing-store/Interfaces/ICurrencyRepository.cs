@@ -1,4 +1,6 @@
-﻿namespace clothing_store.Interfaces
+﻿using clothing_store.Models;
+
+namespace clothing_store.Interfaces
 {
     public interface ICurrencyRepository
     {
@@ -6,6 +8,7 @@
         Task SaveCurrencyAsync(Currency currency);
         Task SaveCurrenciesAsync(IEnumerable<Currency> currencies);
         Task<List<Currency>> GetAllCurrenciesAsync();
+        Task UpdateCurrenciesAsync(List<CurrencyDto> currencies);
     }
 
 }

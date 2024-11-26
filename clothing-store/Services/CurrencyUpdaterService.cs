@@ -1,13 +1,18 @@
-﻿using clothing_store.Services;
+﻿using clothing_store.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 public class CurrencyUpdaterService : IHostedService
 {
-    private readonly CurrencyService _currencyService;
+    private readonly IServiceScopeFactory _scopeFactory;
     private Timer _timer;
 
-    public CurrencyUpdaterService(CurrencyService currencyService)
+    public CurrencyUpdaterService(IServiceScopeFactory scopeFactory)
     {
-        _currencyService = currencyService;
+        _scopeFactory = scopeFactory;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -18,7 +23,11 @@ public class CurrencyUpdaterService : IHostedService
 
     private async void DoWork(object state)
     {
-        await _currencyService.UpdateCurrencyRatesAsync();
+        using (var scope = _scopeFactory.CreateScope()) // Tworzymy nowy zakres
+        {
+            var currencyService = scope.ServiceProvider.GetRequiredService<ICurrencyService>();
+            await currencyService.UpdateCurrencyRatesAsync(); // Wywołanie metody w CurrencyService
+        }
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

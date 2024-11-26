@@ -7,6 +7,7 @@ using clothing_store.Services;
 using clothing_store.Services.clothing_store.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IAccountService, AccountService>();
 builder.Services.AddTransient<IBasketService, BasketService>();
-builder.Services.AddTransient<ICurrencyService, CurrencyService>();
+builder.Services.AddScoped<ICurrencyService, CurrencyService>();
 builder.Services.AddTransient<ITaxService, TaxService>();
 builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IBrandService, BrandService>();
@@ -26,6 +27,7 @@ builder.Services.AddTransient<ICurrencyRepository, CurrencyRepository>();
 builder.Services.AddTransient<IBasketRepository,BasketRepository>();
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
 builder.Services.AddTransient<IBrandRepository, BrandRepository>();
+builder.Services.AddSingleton<IHostedService, CurrencyUpdaterService>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
             {
@@ -43,6 +45,13 @@ builder.Services.AddDbContext<StoreDbContext>(options =>
 
 
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<StoreDbContext>();
+    var seeder = new CurrencySeeder(context);
+    seeder.Seed();
+}
+
 app.UseSession();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -64,5 +73,6 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 
 app.Run();
