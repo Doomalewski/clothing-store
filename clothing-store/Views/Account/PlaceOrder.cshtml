@@ -1,0 +1,92 @@
+﻿@model clothing_store.ViewModels.PlaceOrderViewModel
+
+@{
+    ViewData["Title"] = "Place Order";
+}
+
+<h2>Place Order</h2>
+
+<form method="post" asp-action="PlaceOrder">
+    @* Account and Basket information (hidden) *@
+    <input type="hidden" asp-for="AccountId" />
+    <input type="hidden" asp-for="BasketId" />
+    <input type="hidden" asp-for="AddressId"/>
+
+    <div class="form-group">
+        <label asp-for="ChosenShippingMethodId">Shipping Method</label>
+        <select asp-for="ChosenShippingMethodId" class="form-control">
+            <option value="">-- Select Shipping Method --</option>
+            @foreach (var method in ViewBag.shippingMethods)
+            {
+                <option value="@method.ShippingMethodId">@method.Name</option>
+            }
+        </select> 
+        <span asp-validation-for="ChosenShippingMethodId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ChosenPaymentMethodId">Payment Method</label>
+        <select asp-for="ChosenPaymentMethodId" class="form-control">
+            <option value="">-- Select Payment Method --</option>
+            @foreach (var method in ViewBag.paymentMethods)
+            {
+                <option value="@method.PaymentMethodId">@method.Name</option>
+            }
+        </select>
+        <span asp-validation-for="ChosenPaymentMethodId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Use saved address</label>
+        <input type="checkbox" asp-for="DifferentAddress" class="form-check-input" /> Use a different address?
+    </div>
+
+    @* Display the saved address section *@
+    <div id="saved-address-section" class="form-group" style="display:@(Model.DifferentAddress ? "none" : "block")">
+        <label>Saved Address</label>
+        <p>@Model.Street, @Model.City, @Model.ZipCode, @Model.Country</p>
+    </div>
+
+    @* Display the new address section if "DifferentAddress" is checked *@
+    <div id="new-address-section" class="form-group" style="display:@(Model.DifferentAddress ? "block" : "none")">
+        <label for="Street">Street</label>
+        <input type="text" id="Street" asp-for="Street" class="form-control" />
+        <span asp-validation-for="Street" class="text-danger"></span>
+
+        <label for="City">City</label>
+        <input type="text" id="City" asp-for="City" class="form-control" />
+        <span asp-validation-for="City" class="text-danger"></span>
+
+        <label for="State">State</label>
+        <input type="text" id="State" asp-for="State" class="form-control" />
+        <span asp-validation-for="State" class="text-danger"></span>
+
+        <label for="ZipCode">Zip Code</label>
+        <input type="text" id="ZipCode" asp-for="ZipCode" class="form-control" />
+        <span asp-validation-for="ZipCode" class="text-danger"></span>
+
+        <label for="Country">Country</label>
+        <input type="text" id="Country" asp-for="Country" class="form-control" />
+        <span asp-validation-for="Country" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Place Order</button>
+</form>
+
+@section Scripts {
+    <script>
+        // Toggle visibility of address fields based on the "DifferentAddress" checkbox
+        document.querySelector('.form-check-input').addEventListener('change', function () {
+            var newAddressSection = document.getElementById('new-address-section');
+            var savedAddressSection = document.getElementById('saved-address-section');
+
+            if (this.checked) {
+                savedAddressSection.style.display = 'none';
+                newAddressSection.style.display = 'block';
+            } else {
+                savedAddressSection.style.display = 'block';
+                newAddressSection.style.display = 'none';
+            }
+        });
+    </script>
+}

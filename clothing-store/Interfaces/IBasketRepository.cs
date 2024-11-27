@@ -16,6 +16,9 @@
             Task<BasketProduct> GetBasketProductByIdAsync(int accountId, int productId);
             Task UpdateBasketProductAsync(BasketProduct basketProduct);
             Task RemoveBasketProductAsync(BasketProduct basketProduct);
+            Task ClearBasketByAccountIdAsync(int accountId);
+            Task<Basket> GetBasketByIdAsync(int basketId);
+
         }
     }
 

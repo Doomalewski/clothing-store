@@ -1,6 +1,8 @@
 ﻿using clothing_store.Interfaces;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using clothing_store.Interfaces.clothing_store.Interfaces;
 
 namespace clothing_store.Services
 {
@@ -9,11 +11,17 @@ namespace clothing_store.Services
         private readonly IAccountRepository _accountRepository;
         private readonly IConfiguration _configuration;
         private readonly PasswordHasher<string> _passwordHasher;
-        public AccountService(IAccountRepository accountRepository, IConfiguration configuration)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IBasketRepository _basketRepository;
+        private readonly IAddressRepository _addressRepository;
+        public AccountService(IAccountRepository accountRepository, IConfiguration configuration,IHttpContextAccessor httpContext,IBasketRepository basketRepository,IAddressRepository addressRepository)
         {
             _accountRepository = accountRepository;
             _passwordHasher = new PasswordHasher<string>();
             _configuration = configuration;
+            _httpContextAccessor = httpContext;
+            _basketRepository = basketRepository;
+            _addressRepository = addressRepository;
         }
         public async Task<Account> GetAccountByIdAsync(int accountId)
         {
@@ -44,6 +52,28 @@ namespace clothing_store.Services
         public async Task<Account> GetAccountByEmailAsync(string email)
         {
             return await _accountRepository.GetAccountByEmailAsync(email);
+        }
+
+        public async Task<Account> GetAccountFromHttpAsync()
+        {
+            var accountIdClaim = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (accountIdClaim == null)
+            {
+                return null;
+            }
+
+            if (!int.TryParse(accountIdClaim.Value, out var accountId))
+            {
+                return null;
+            }
+
+            return await _accountRepository.GetAccountByIdAsync(accountId);
+        }
+        public async Task ClearBasketAsync(int accountId) => await _basketRepository.ClearBasketByAccountIdAsync(accountId);
+        public async Task<Address> GetAddressByIdAsync(int addressId)
+        {
+            return await _addressRepository.GetAddressByIdAsync(addressId);
         }
     }
 }

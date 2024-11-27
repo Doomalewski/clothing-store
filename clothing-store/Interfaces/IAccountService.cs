@@ -1,4 +1,7 @@
-﻿namespace clothing_store.Interfaces
+﻿using clothing_store.Repositories;
+using System.Runtime.CompilerServices;
+
+namespace clothing_store.Interfaces
 {
     public interface IAccountService
     {
@@ -11,6 +14,9 @@
         public Task DeleteAccountAsync(Account account);
         public Task<Account> GetAccountByEmailAsync(string email);
         public bool VerifyPassword(string hashedPassword, string password);
+        public Task<Account> GetAccountFromHttpAsync();
+        public Task ClearBasketAsync(int accountId);
+        public Task<Address> GetAddressByIdAsync(int addressId);
 
-    }
+    }   
 }

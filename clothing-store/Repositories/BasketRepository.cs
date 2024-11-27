@@ -111,6 +111,36 @@
                 _context.BasketProducts.Remove(item);
                 await _context.SaveChangesAsync();
             }
+            public async Task ClearBasketByAccountIdAsync(int accountId)
+            {
+                // Znajdź koszyk powiązany z podanym AccountId
+                var basket = await _context.Baskets
+                    .Include(b => b.BasketProducts)
+                    .ThenInclude(bp => bp.Product)
+                    .FirstOrDefaultAsync(b => b.AccountId == accountId);
+
+                if (basket == null)
+                {
+                    throw new InvalidOperationException($"Koszyk dla użytkownika z ID {accountId} nie został znaleziony.");
+                }
+
+                // Usuń wszystkie produkty z koszyka
+                if (basket.BasketProducts != null && basket.BasketProducts.Any())
+                {
+                    _context.BasketProducts.RemoveRange(basket.BasketProducts);
+                }
+
+                // Zapisz zmiany w bazie danych
+                await _context.SaveChangesAsync();
+            }
+            public async Task<Basket> GetBasketByIdAsync(int basketId)
+            {
+                return await _context.Baskets
+                            .Include(b => b.BasketProducts)
+                            .ThenInclude(bp => bp.Product)
+                            .FirstOrDefaultAsync(b=>b.BasketId == basketId);
+            }
+
         }
     }
 

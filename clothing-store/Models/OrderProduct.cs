@@ -23,9 +23,5 @@ namespace clothing_store.Models
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Quantity has to be greater than 0")]
         public int Quantity { get; set; }
-
-        [Required]
-        [Range(0, int.MaxValue, ErrorMessage = "Price can't be negative")]
-        public int Price { get; set; }
     }
 }

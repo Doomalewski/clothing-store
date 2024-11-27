@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using clothing_store.ViewModels;
+using clothing_store.Repositories;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace clothing_store.Controllers
 {
@@ -17,13 +20,15 @@ namespace clothing_store.Controllers
         private readonly IBasketService _basketService;
         private readonly IProductService _productService;
         private readonly IEmailService _emailService;
-        public AccountController(IAccountService accountService,ICurrencyService currencyService,IBasketService basketService,IProductService productService, IEmailService emailService)
+        private readonly IOrderService _orderService;
+        public AccountController(IAccountService accountService,ICurrencyService currencyService,IBasketService basketService,IProductService productService, IEmailService emailService,IOrderService orderService)
         {
             _accountService = accountService;
             _currencyService = currencyService;
             _basketService = basketService;
             _productService = productService;
             _emailService = emailService;
+            _orderService = orderService;
         }
         // GET: AccountController
         public ActionResult Index()
@@ -67,7 +72,14 @@ namespace clothing_store.Controllers
                 Basket = basket,
                 Name = string.Empty,
                 Surname = string.Empty,
-                Address = null,
+                Address = new Address() // Pusty adres przypisany do konta
+                {
+                    Street = string.Empty,
+                    City = string.Empty,
+                    State = string.Empty,
+                    ZipCode = string.Empty,
+                    Country = string.Empty
+                },
                 Discounts = new List<SpecialDiscount>(),
                 CorporateClient = false,
                 Newsletter = false,
@@ -255,6 +267,119 @@ namespace clothing_store.Controllers
         {
             return View();
         }
+        [HttpGet]
+        public async Task<IActionResult> PlaceOrder()
+        {
+            // Pobranie danych konta
+            var account = await _accountService.GetAccountFromHttpAsync();
+            if (account == null)
+            {
+                return RedirectToAction("Login", "Account"); // Przekierowanie, jeśli użytkownik nie jest zalogowany
+            }
+
+            // Pobranie koszyka
+            var basket = await _basketService.GetBasketByAccountIdAsync(account.AccountId);
+            if (basket == null || !basket.BasketProducts.Any())
+            {
+                return RedirectToAction("Index", "Basket"); // Przekierowanie, jeśli koszyk jest pusty
+            }
+            var address = await _accountService.GetAddressByIdAsync(account.AddressId);
+            ViewBag.shippingMethods = await _orderService.GetAllShippingMethodsAsync();
+            ViewBag.paymentMethods = await _orderService.GetAllPaymentMethodsAsync();
+
+            // Przygotowanie modelu widoku
+            var model = new PlaceOrderViewModel
+            {
+                AccountId = account.AccountId,
+                BasketId = basket.BasketId,
+                AddressId = account.AddressId,
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PlaceOrder(PlaceOrderViewModel model)
+        {
+            // 1. Jeśli użytkownik nie wybrał innego adresu, przypisz dane adresowe z konta
+            if (!model.DifferentAddress)
+            {
+                var address = await _accountService.GetAddressByIdAsync(model.AddressId);
+                model.City = address.City;
+                model.Country = address.Country;
+                model.State = address.State;
+                model.ZipCode = address.ZipCode;
+                model.Street = address.Street;
+            }
+
+            // 2. Pobranie konta na podstawie AccountId
+            var account = await _accountService.GetAccountByIdAsync(model.AccountId);
+            if (account == null)
+            {
+                ModelState.AddModelError("", "Account not found.");
+                return View(model);
+            }
+
+            // 3. Pobranie koszyka na podstawie BasketId
+            var basket = await _basketService.GetBasketByIdAsync(model.BasketId);
+            if (basket == null || !basket.BasketProducts.Any())
+            {
+                ModelState.AddModelError("", "Basket is empty.");
+                return View(model);
+            }
+
+            var shippingMethod = await _orderService.GetShippingMethodByIdAsync(model.ChosenShippingMethodId);
+            var paymentMethod = await _orderService.GetPaymentMethodByIdAsync(model.ChosenPaymentMethodId);
+            // 4. Sprawdzanie, czy wszystkie pola adresowe są wypełnione, jeśli wybrano nowy adres
+            if (model.DifferentAddress && (string.IsNullOrEmpty(model.Street) || string.IsNullOrEmpty(model.City) ||
+                                            string.IsNullOrEmpty(model.State) || string.IsNullOrEmpty(model.ZipCode) ||
+                                            string.IsNullOrEmpty(model.Country)))
+            {
+                ModelState.AddModelError("", "All address fields are required when choosing a new address.");
+                return View(model);
+            }
+
+            // 5. Utworzenie zamówienia
+            var order = new Order
+            {
+                AccountId = model.AccountId,
+                Street = model.Street,
+                City = model.City,
+                State = model.State,
+                ZipCode = model.ZipCode,
+                Country = model.Country,
+                FullPrice = basket.BasketProducts.Sum(bp => bp.Quantity * bp.Product.Price) + (decimal)shippingMethod.Price, // Dodaj koszty wysyłki (np. z modelu ShippingMethod)
+                OrderStatus = StatusEnum.New, // Ustaw status zamówienia na 'Pending'
+                Shipping = shippingMethod, // Zakładając, że ShippingMethod to pole w modelu PlaceOrderViewModel
+                Payment = paymentMethod, // Zakładając, że PaymentMethod to pole w modelu PlaceOrderViewModel
+                Date = DateTime.UtcNow // Ustawienie daty zamówienia
+            };
+
+            // 6. Zapisanie zamówienia w bazie danych
+            await _orderService.AddOrderAsync(order);
+
+            // 7. Dodanie produktów do zamówienia
+            foreach (var item in basket.BasketProducts)
+            {
+                var orderProduct = new OrderProduct
+                {
+                    OrderId = order.OrderId,
+                    ProductId = item.ProductId,
+                    Quantity = item.Quantity
+                };
+
+                //_orderService.AddOrderProductAsync(orderProduct);
+            }
+            //await _context.SaveChangesAsync();
+
+            // 8. Po zapisaniu zamówienia, opróżnianie koszyka
+            await _accountService.ClearBasketAsync(model.AccountId);
+
+            // 9. Przekierowanie do strony potwierdzenia zamówienia
+            return RedirectToAction("OrderConfirmation", new { orderId = order.OrderId });
+        }
+
+
 
     }
 }

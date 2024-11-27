@@ -20,6 +20,9 @@ builder.Services.AddTransient<ITaxService, TaxService>();
 builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IBrandService, BrandService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddTransient<IOrderService, OrderService>();
+
+builder.Services.AddHttpContextAccessor();
 
 // Adding repositories as Transient
 builder.Services.AddTransient<ITaxRepository, TaxRepository>();
@@ -28,6 +31,9 @@ builder.Services.AddTransient<ICurrencyRepository, CurrencyRepository>();
 builder.Services.AddTransient<IBasketRepository,BasketRepository>();
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
 builder.Services.AddTransient<IBrandRepository, BrandRepository>();
+builder.Services.AddTransient<IOrderRepository, OrderRepository>();
+builder.Services.AddTransient<IAddressRepository, AddressRepository>();
+
 builder.Services.AddSingleton<IHostedService, CurrencyUpdaterService>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
@@ -51,6 +57,11 @@ using (var scope = app.Services.CreateScope())
     var context = scope.ServiceProvider.GetRequiredService<StoreDbContext>();
     var seeder = new CurrencySeeder(context);
     seeder.Seed();
+    var shippingSeeder = new ShippingMethodSeeder(context);
+    await shippingSeeder.SeedAsync();
+
+    var paymentSeeder = new PaymentMethodSeeder(context);
+    await paymentSeeder.SeedAsync();
 }
 
 app.UseSession();

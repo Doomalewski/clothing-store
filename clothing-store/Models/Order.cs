@@ -23,7 +23,17 @@ public class Order
         public Account ClientDetails { get; set; }
 
         [Required]
-        public Address Address { get; set; }
+        public string Street { get; set; }
+        [Required]
+
+        public string City { get; set; }
+        public string State { get; set; }
+        [Required]
+
+        public string ZipCode { get; set; }
+        [Required]
+
+        public string Country { get; set; }
 
         public List<OrderProduct> Products { get; set; } = new();
 
@@ -45,6 +55,6 @@ public class Order
 
         [Required]
         [Range(0, int.MaxValue, ErrorMessage = "Pełna cena nie może być ujemna.")]
-        public int FullPrice { get; set; }
+        public decimal FullPrice { get; set; }
     }
 

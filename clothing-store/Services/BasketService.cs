@@ -24,7 +24,10 @@
             {
                 return await _basketRepository.GetBasketByAccountIdAsync(accountId);
             }
-
+            public async Task<Basket> GetBasketByIdAsync(int basketId)
+            {
+                return await _basketRepository.GetBasketByIdAsync(basketId);
+            }
             public async Task AddBasketAsync(Basket basket)
             {
                 await _basketRepository.AddBasketAsync(basket);
@@ -82,7 +85,6 @@
                     await _basketRepository.RemoveBasketProductAsync(item);
                 }
             }
-
         }
     }
 
