@@ -1,4 +1,4 @@
-﻿using clothing_store.Interfaces;
+﻿ using clothing_store.Interfaces;
 using clothing_store.Interfaces.clothing_store.Interfaces;
 using clothing_store.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -16,12 +16,14 @@ namespace clothing_store.Controllers
         private readonly ICurrencyService _currencyService;
         private readonly IBasketService _basketService;
         private readonly IProductService _productService;
-        public AccountController(IAccountService accountService,ICurrencyService currencyService,IBasketService basketService,IProductService productService)
+        private readonly IEmailService _emailService;
+        public AccountController(IAccountService accountService,ICurrencyService currencyService,IBasketService basketService,IProductService productService, IEmailService emailService)
         {
             _accountService = accountService;
             _currencyService = currencyService;
             _basketService = basketService;
             _productService = productService;
+            _emailService = emailService;
         }
         // GET: AccountController
         public ActionResult Index()
@@ -72,7 +74,7 @@ namespace clothing_store.Controllers
                 Role = "User"
             };
             await _accountService.AddAccountAsync(account);
-
+            await _emailService.SendConfirmationEmail(model.Username);
 
             return RedirectToAction("Login", "Account");
         }

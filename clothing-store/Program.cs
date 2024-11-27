@@ -19,6 +19,7 @@ builder.Services.AddScoped<ICurrencyService, CurrencyService>();
 builder.Services.AddTransient<ITaxService, TaxService>();
 builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IBrandService, BrandService>();
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 // Adding repositories as Transient
 builder.Services.AddTransient<ITaxRepository, TaxRepository>();

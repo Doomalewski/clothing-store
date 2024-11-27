@@ -42,14 +42,17 @@ body {
     }
 
     .navgrid a:nth-child(4) {
-        grid-column: 10
+        grid-column: 19
     }
 
     .navgrid a:nth-child(5) {
-        grid-column: 11
+        grid-column: 10
     }
 
     .navgrid a:nth-child(6) {
+        grid-column: 11
+    }
+    .navgrid a:nth-child(7) {
         grid-column: 12
     }
 
