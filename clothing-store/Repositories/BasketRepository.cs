@@ -95,7 +95,22 @@
                 // Zapisz zmiany w bazie danych
                 await _context.SaveChangesAsync();
             }
+            public async Task<BasketProduct> GetBasketProductByIdAsync(int accountId, int productId)
+            {
+                return await _context.BasketProducts
+                    .FirstOrDefaultAsync(b => b.Basket.AccountId == accountId && b.ProductId == productId);
+            }
 
+            public async Task UpdateBasketProductAsync(BasketProduct item)
+            {
+                _context.BasketProducts.Update(item);
+                await _context.SaveChangesAsync();
+            }
+            public async Task RemoveBasketProductAsync(BasketProduct item)
+            {
+                _context.BasketProducts.Remove(item);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 

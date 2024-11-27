@@ -46,7 +46,57 @@ namespace clothing_store.Controllers
             var items = await _basketService.GetBasketByAccountIdAsync(accountId);
             return View(items);
         }
+        [HttpPost]
+        public async Task<IActionResult> UpdateCart(int productId, string action)
+        {
+            var accountIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (accountIdClaim == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            int accountId = int.Parse(accountIdClaim.Value);
+
+            var item = await _basketService.GetBasketProductByIdAsync(accountId, productId);
+
+            if (item != null)
+            {
+                switch (action)
+                {
+                    case "increment":
+                        await _basketService.UpdateProductQuantityAsync(accountId, productId, item.Quantity + 1); // Inkrementacja ilości
+                        break;
+                    case "decrement":
+                        if (item.Quantity > 1) // Sprawdź, czy ilość nie spadnie poniżej 1
+                        {
+                            await _basketService.UpdateProductQuantityAsync(accountId, productId, item.Quantity - 1); // Dekrementacja ilości
+                        }
+                        break;
+                }
+            }
+
+            return RedirectToAction("Index");
+        }
+        [HttpPost]
+        public async Task<IActionResult> RemoveFromCart(int productId)
+        {
+            var accountIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (accountIdClaim == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            int accountId = int.Parse(accountIdClaim.Value);
+
+            // Usuń produkt z koszyka
+            await _basketService.RemoveProductFromBasketAsync(accountId, productId);
+
+            // Przekierowanie z powrotem do koszyka
+            return RedirectToAction("Index");
+        }
     }
-    
-    
+
+
 }

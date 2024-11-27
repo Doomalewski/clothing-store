@@ -13,6 +13,10 @@
             Task DeleteBasketByIdAsync(int basketId);
             Task DeleteBasketAsync(Basket basket);
             Task AddProductToCartAsync(int AccountId, Product ProductId);
+            Task<BasketProduct> GetBasketProductByIdAsync(int accountId, int productId);
+            Task UpdateProductQuantityAsync(int accountId, int productId, int newQuantity);
+            Task RemoveProductFromBasketAsync(int accountId, int productId);
+
         }
     }
 

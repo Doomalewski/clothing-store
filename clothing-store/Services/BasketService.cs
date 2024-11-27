@@ -58,6 +58,30 @@
                 // Dodaj produkt do koszyka użytkownika
                 await _basketRepository.AddProductToCartAsync(basket, product);
             }
+            public async Task<BasketProduct> GetBasketProductByIdAsync(int accountId, int productId)
+            {
+                return await _basketRepository.GetBasketProductByIdAsync(accountId, productId);
+            }
+
+            public async Task UpdateProductQuantityAsync(int accountId, int productId, int newQuantity)
+            {
+                var item = await _basketRepository.GetBasketProductByIdAsync(accountId, productId);
+
+                if (item != null)
+                {
+                    item.Quantity = newQuantity;
+                    await _basketRepository.UpdateBasketProductAsync(item);
+                }
+            }
+            public async Task RemoveProductFromBasketAsync(int accountId, int productId)
+            {
+                var item = await _basketRepository.GetBasketProductByIdAsync(accountId, productId);
+
+                if (item != null)
+                {
+                    await _basketRepository.RemoveBasketProductAsync(item);
+                }
+            }
 
         }
     }
