@@ -1,54 +1,58 @@
 @model clothing_store.Models.ProductCreateDto
 
-<h2>Dodaj nowy produkt</h2>
+<div class="container mt-5">
+    <h2 class="text-black text-center mb-4">Dodaj nowy produkt</h2>
 
-<form asp-action="Create" method="post">
-    <div>
-        <label for="Name">Nazwa produktu:</label>
-        <input type="text" id="Name" name="Name" required />
-    </div>
+    <form asp-action="Create" method="post" class="p-4 rounded shadow-lg" style="background-color: #000; color: white;">
+        <div class="mb-3">
+            <label for="Name" class="form-label">Nazwa produktu:</label>
+            <input type="text" id="Name" name="Name" class="form-control" placeholder="Wprowadź nazwę produktu" required />
+        </div>
 
-    <div>
-        <label for="Description">Opis produktu:</label>
-        <textarea id="Description" name="Description" required></textarea>
-    </div>
+        <div class="mb-3">
+            <label for="Description" class="form-label">Opis produktu:</label>
+            <textarea id="Description" name="Description" class="form-control" placeholder="Dodaj opis produktu" rows="3" required></textarea>
+        </div>
 
-    <div>
-        <label for="Price">Cena:</label>
-        <input type="number" id="Price" name="Price" step="0.01" required />
-    </div>
+        <div class="mb-3">
+            <label for="Price" class="form-label">Cena:</label>
+            <input type="number" id="Price" name="Price" class="form-control" step="0.01" placeholder="Wprowadź cenę" required />
+        </div>
 
-    <div>
-        <label for="Quantity">Ilo��:</label>
-        <input type="number" id="Quantity" name="Quantity" required />
-    </div>
+        <div class="mb-3">
+            <label for="Quantity" class="form-label">Ilość:</label>
+            <input type="number" id="Quantity" name="Quantity" class="form-control" placeholder="Podaj ilość" required />
+        </div>
 
-    <div>
-        <label for="BrandId">Marka:</label>
-        <select id="BrandId" name="BrandId" required>
-            <option value="">Wybierz mark�</option>
-            @foreach (var brand in ViewBag.Brands)
-            {
-                <option value="@brand.BrandId">@brand.Name</option>
-            }
-        </select>
-    </div>
+        <div class="mb-3">
+            <label for="BrandId" class="form-label">Marka:</label>
+            <select id="BrandId" name="BrandId" class="form-select" required>
+                <option value="">Wybierz markę</option>
+                @foreach (var brand in ViewBag.Brands)
+                {
+                    <option value="@brand.BrandId">@brand.Name</option>
+                }
+            </select>
+        </div>
 
-    <div>
-        <label for="TaxId">Podatek VAT:</label>
-        <select id="TaxId" name="TaxId" required>
-            <option value="">Wybierz podatek VAT</option>
-            @foreach (var tax in ViewBag.Taxes)
-            {
-                <option value="@tax.TaxId">@tax.Value %</option>
-            }
-        </select>
-    </div>
+        <div class="mb-3">
+            <label for="TaxId" class="form-label">Podatek VAT:</label>
+            <select id="TaxId" name="TaxId" class="form-select" required>
+                <option value="">Wybierz podatek VAT</option>
+                @foreach (var tax in ViewBag.Taxes)
+                {
+                    <option value="@tax.TaxId">@tax.Value %</option>
+                }
+            </select>
+        </div>
 
-    <div>
-        <label for="Visible">Widoczno��:</label>
-        <input type="checkbox" id="Visible" asp-for="Visible" />
-    </div>
+        <div class="form-check mb-3">
+            <input type="checkbox" id="Visible" name="Visible" class="form-check-input" asp-for="Visible" />
+            <label for="Visible" class="form-check-label">Widoczność:</label>
+        </div>
 
-    <button type="submit" value="Create">Dodaj produkt</button>
-</form>
+        <div class="text-center">
+            <button type="submit" value="Create" class="btn btn-success w-100">Dodaj produkt</button>
+        </div>
+    </form>
+</div>

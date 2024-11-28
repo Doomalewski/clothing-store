@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace clothing_store.Controllers
 {
-    [Authorize(Roles = "Admin")]
+   // [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly IAccountService _accountService;
