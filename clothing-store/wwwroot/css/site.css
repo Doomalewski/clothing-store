@@ -24,7 +24,7 @@ body {
     display: grid;
     width:100%;
     grid-template-columns: repeat(12, 1fr); /* 12 kolumn */
-    gap: 15px; /* Odstêpy miêdzy elementami */
+    gap: 0px; /* Odstï¿½py miï¿½dzy elementami */
     background-color: #000;
     height: 50px;
 }
@@ -67,50 +67,50 @@ a {
 }
 
 .baner {
-    width: 100%; /* Pe³na szerokoœæ strony */
-    height: 300px; /* Wysokoœæ 300px */
-    overflow: hidden; /* Ukrycie nadmiaru zdjêcia */
-    position: relative; /* Aby efekt dzia³a³ poprawnie */
-    transition: background 0.3s ease-in-out; /* P³ynna zmiana gradientu przy najechaniu */
+    width: 100%; /* Peï¿½na szerokoï¿½ï¿½ strony */
+    height: 300px; /* Wysokoï¿½ï¿½ 300px */
+    overflow: hidden; /* Ukrycie nadmiaru zdjï¿½cia */
+    position: relative; /* Aby efekt dziaï¿½aï¿½ poprawnie */
+    transition: background 0.3s ease-in-out; /* Pï¿½ynna zmiana gradientu przy najechaniu */
 }
 
     .baner img {
-        width: 100%; /* Dopasowanie do szerokoœci */
-        height: 150%; /* Dopasowanie do wysokoœci */
+        width: 100%; /* Dopasowanie do szerokoï¿½ci */
+        height: 150%; /* Dopasowanie do wysokoï¿½ci */
         object-fit: cover; /* Dopasowanie obrazu bez zmiany proporcji */
-        transition: transform 0.3s ease-in-out; /* P³ynna animacja zooma */
+        transition: transform 0.3s ease-in-out; /* Pï¿½ynna animacja zooma */
     }
 
     .baner:hover img {
-        transform: scale(1.1); /* Powiêkszenie zdjêcia przy najechaniu */
+        transform: scale(1.1); /* Powiï¿½kszenie zdjï¿½cia przy najechaniu */
     }
 
     .baner h1 {
-        position: absolute; /* Pozycjonowanie nag³ówka nad obrazkiem */
-        top: 35%; /* Wyœrodkowanie w pionie */
-        left: 50%; /* Wyœrodkowanie w poziomie */
-        transform: translate(-50%, -50%); /* W³aœciwe wyœrodkowanie */
+        position: absolute; /* Pozycjonowanie nagï¿½ï¿½wka nad obrazkiem */
+        top: 35%; /* Wyï¿½rodkowanie w pionie */
+        left: 50%; /* Wyï¿½rodkowanie w poziomie */
+        transform: translate(-50%, -50%); /* Wï¿½aï¿½ciwe wyï¿½rodkowanie */
         color: white; /* Kolor tekstu */
         font-size: 3rem; /* Rozmiar czcionki */
         font-weight: bold; /* Pogrubienie tekstu */
-        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Cieñ tekstu */
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Cieï¿½ tekstu */
     }
 
 .product-card {
     width: 200px;
     height: 250px;
     background-color: #fff;
-    border-radius: 15px; /* Zaokr¹glone rogi */
+    border-radius: 15px; /* Zaokrï¿½glone rogi */
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    margin: 20px;
+    margin: 0px;
 }
 
 .product-image {
     width: 100%;
-    height: 70%; /* Zajmuje górn¹ po³owê karty */
+    height: 70%; /* Zajmuje gï¿½rnï¿½ poï¿½owï¿½ karty */
     object-fit: cover;
 }
 
@@ -135,7 +135,7 @@ a {
 .product-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px; /* Odstêpy miêdzy kartami */
+    gap: 10px; /* Odstï¿½py miï¿½dzy kartami */
 }
 footer {
     background-color: #111;
