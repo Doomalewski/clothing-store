@@ -213,32 +213,34 @@ namespace clothing_store.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Details()
+        public async Task<IActionResult> Details(int id)
         {
-            // Pobierz AccountId z ról lub z claims, jeśli użytkownik jest zalogowany
-            var accountIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+            var account = await _accountService.GetAccountFromHttpAsync();
 
-            // Sprawdź, czy AccountId jest dostępne w claims
-            if (accountIdClaim == null)
-            {
-                return RedirectToAction("Login", "Account"); // Przekierowanie do logowania, jeśli brak ID
-            }
-
-            // Zamień AccountId na int
-            int accountId = int.Parse(accountIdClaim.Value);
-
-            // Pobierz dane konta na podstawie AccountId
-            var account = await _accountService.GetAccountByIdAsync(accountId);
-
-            // Jeśli konto nie istnieje, zwróć 404
             if (account == null)
             {
                 return NotFound();
             }
 
-            // Przekaż dane do widoku
-            return View(account);
+            // Mapowanie zamówień na DTO
+            var orderDtos = account.Orders.Select(o => new OrderSummaryDto
+            {
+                OrderId = o.OrderId,
+                Date = o.Date,
+                OrderStatus = o.OrderStatus,
+                FullPrice = o.FullPrice
+            }).ToList();
+
+            // Tworzymy ViewModel, który zawiera dane konta i zamówień
+            var viewModel = new AccountDetailsViewModel
+            {
+                Account = account,
+                Orders = orderDtos
+            };
+
+            return View(viewModel);
         }
+
         [HttpPost]
         public async Task<IActionResult> AddProductToCart(int id)
         {
@@ -347,6 +349,7 @@ namespace clothing_store.Controllers
                 City = model.City,
                 State = model.State,
                 ZipCode = model.ZipCode,
+                ProductsPrice = (int) basket.BasketProducts.Sum(bp => bp.Quantity * bp.Product.Price),
                 Country = model.Country,
                 FullPrice = basket.BasketProducts.Sum(bp => bp.Quantity * bp.Product.Price) + (decimal)shippingMethod.Price, // Dodaj koszty wysyłki (np. z modelu ShippingMethod)
                 OrderStatus = StatusEnum.New, // Ustaw status zamówienia na 'Pending'
@@ -368,9 +371,8 @@ namespace clothing_store.Controllers
                     Quantity = item.Quantity
                 };
 
-                //_orderService.AddOrderProductAsync(orderProduct);
+                await _orderService.AddOrderProductAsync(orderProduct);
             }
-            //await _context.SaveChangesAsync();
 
             // 8. Po zapisaniu zamówienia, opróżnianie koszyka
             await _accountService.ClearBasketAsync(model.AccountId);

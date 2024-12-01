@@ -1,5 +1,6 @@
 ﻿using clothing_store.Interfaces;
 using clothing_store.Models;
+using EllipticCurve.Utils;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
 
@@ -42,5 +43,39 @@ namespace clothing_store.Repositories
         {
             return await _context.ShippingMethods.FirstOrDefaultAsync(m => m.ShippingMethodId == shippingMethodId);
         }
+        public async Task AddOrderProductAsync(OrderProduct orderProduct)
+        {
+            if (orderProduct == null)
+            {
+                throw new ArgumentNullException(nameof(orderProduct), "Order cannot be null.");
+            }
+
+            // Dodaj zamówienie do kontekstu
+            await _context.OrderProducts.AddAsync(orderProduct);
+
+            // Zapisz zmiany w bazie danych
+            await _context.SaveChangesAsync();
+        }
+        public async Task<List<Order>> GetOrdersByAccountIdAsync(int accountId)
+        {
+            return await _context.Orders
+                .Include(o => o.Products)
+                .ThenInclude(op => op.Product)
+                .Include(s => s.Shipping)
+                .Include(p=>p.Payment)
+                .Where(o => o.AccountId == accountId)
+                .ToListAsync();
+        }
+        public async Task<Order> GetOrderByIdAsync(int orderId)
+        {
+            return await _context.Orders
+                .Include(o => o.Products)
+                .ThenInclude(op => op.Product)
+                .Include(s => s.Shipping)
+                .Include(p => p.Payment)
+                .Where(o => o.OrderId == orderId)
+                .FirstOrDefaultAsync();
+        }
+
     }
 }

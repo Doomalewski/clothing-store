@@ -26,11 +26,6 @@ namespace clothing_store.Controllers
             return View(Products);
         }
 
-        // GET: ProductController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
 
         // GET: ProductController/Create
         public async Task<IActionResult> Create()
@@ -54,7 +49,33 @@ namespace clothing_store.Controllers
             {
                 return View(dto);
             }
+            var uploadedFileNames = new List<string>();
 
+            // Sprawdzanie czy są załączone zdjęcia
+            if (dto.Photos != null && dto.Photos.Count > 0)
+            {
+                foreach (var photo in dto.Photos)
+                {
+                    if (photo.Length > 0)
+                    {
+                        // Generowanie nowej nazwy pliku na podstawie nazwy produktu
+                        var fileExtension = Path.GetExtension(photo.FileName);
+                        var newFileName = $"{dto.Name}{uploadedFileNames.Count + 1}{fileExtension}";
+
+                        // Ścieżka do zapisu pliku
+                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", newFileName);
+
+                        // Zapisanie pliku na dysku
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await photo.CopyToAsync(stream);
+                        }
+
+                        // Dodanie nazwy pliku do listy
+                        uploadedFileNames.Add(newFileName);
+                    }
+                }
+            }
             var tax = await _taxService.GetTaxByIdAsync(dto.TaxId);
             var brand = await _brandService.GetBrandByIdAsync(dto.BrandId);
 
@@ -74,7 +95,7 @@ namespace clothing_store.Controllers
                 Visible = dto.Visible,
                 Price = dto.Price,
                 Tax = tax,
-                Photos = new List<string>(),
+                Photos = uploadedFileNames,
                 PinnedFiles = new List<LinkedFile>(),
                 New = true,
                 TimePosted = DateTime.Now,
@@ -91,9 +112,10 @@ namespace clothing_store.Controllers
 
 
         // GET: ProductController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            return View();
+            var product = await _productService.GetProductByIdAsync(id);
+            return View(product);
         }
 
         // POST: ProductController/Edit/5

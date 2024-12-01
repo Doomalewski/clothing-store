@@ -1,4 +1,5 @@
-﻿@model Account
+﻿@using clothing_store.ViewModels
+@model AccountDetailsViewModel
 
 @{
     ViewData["Title"] = "Account Details";
@@ -10,8 +11,8 @@
     <div class="p-4 rounded" style="background-color: #000; color: #fff; max-width: 600px; margin: 0 auto;">
         <!-- Profile Section -->
         <div class="text-center mb-4">
-            <h2 class="text-white" style="font-size: 1.5rem;">@Model.Username</h2>
-            <p class="text-muted" style="font-size: 1rem;">@Model.Email</p>
+            <h2 class="text-white" style="font-size: 1.5rem;">@Model.Account.Username</h2>
+            <p class="text-muted" style="font-size: 1rem;">@Model.Account.Email</p>
         </div>
 
         <!-- Details Section -->
@@ -21,33 +22,33 @@
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label class="form-label">First Name</label>
-                    <input type="text" class="form-control bg-dark text-white" value="@Model.Name" readonly>
+                    <input type="text" class="form-control bg-dark text-white" value="@Model.Account.Name" readonly>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Last Name</label>
-                    <input type="text" class="form-control bg-dark text-white" value="@Model.Surname" readonly>
+                    <input type="text" class="form-control bg-dark text-white" value="@Model.Account.Surname" readonly>
                 </div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label class="form-label">Age</label>
-                    <input type="text" class="form-control bg-dark text-white" value="@Model.Age" readonly>
+                    <input type="text" class="form-control bg-dark text-white" value="@Model.Account.Age" readonly>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Gender</label>
-                    <input type="text" class="form-control bg-dark text-white" value="@(Model.Sex ? "Male" : "Female")" readonly>
+                    <input type="text" class="form-control bg-dark text-white" value="@(Model.Account.Sex ? "Male" : "Female")" readonly>
                 </div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label class="form-label">Height</label>
-                    <input type="text" class="form-control bg-dark text-white" value="@Model.Height cm" readonly>
+                    <input type="text" class="form-control bg-dark text-white" value="@Model.Account.Height cm" readonly>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Weight</label>
-                    <input type="text" class="form-control bg-dark text-white" value="@Model.Weight kg" readonly>
+                    <input type="text" class="form-control bg-dark text-white" value="@Model.Account.Weight kg" readonly>
                 </div>
             </div>
         </div>
@@ -59,18 +60,18 @@
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label class="form-label">Favorite Color</label>
-                    <input type="text" class="form-control bg-dark text-white" value="@Model.FavouriteColor" readonly>
+                    <input type="text" class="form-control bg-dark text-white" value="@Model.Account.FavouriteColor" readonly>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Newsletter</label>
-                    <input type="text" class="form-control bg-dark text-white" value="@(Model.Newsletter ? "Subscribed" : "Not Subscribed")" readonly>
+                    <input type="text" class="form-control bg-dark text-white" value="@(Model.Account.Newsletter ? "Subscribed" : "Not Subscribed")" readonly>
                 </div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label class="form-label">Corporate Client</label>
-                    <input type="text" class="form-control bg-dark text-white" value="@(Model.CorporateClient ? "Yes" : "No")" readonly>
+                    <input type="text" class="form-control bg-dark text-white" value="@(Model.Account.CorporateClient ? "Yes" : "No")" readonly>
                 </div>
             </div>
         </div>
@@ -79,14 +80,22 @@
         <div class="mb-4">
             <h3 class="text-white" style="font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem;">Address</h3>
             <textarea class="form-control bg-dark text-white" rows="2" readonly>
-                @(Model.Address != null ? $"{Model.Address.Street}, {Model.Address.City}" : "No assigned address")
+                @(Model.Account.Address != null ? $"{Model.Account.Address.Street}, {Model.Account.Address.City}" : "No assigned address")
             </textarea>
+        </div>
+
+        <!-- Orders Section -->
+        <div class="mb-4">
+            <h3 class="text-white" style="font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem;">Orders</h3>
+            <div id="ordersList">
+                @await Html.PartialAsync("_OrdersListPartial", Model.Orders)
+            </div>
         </div>
 
         <!-- Action Buttons -->
         <div class="text-center">
-            <a asp-action="Edit" asp-route-id="@Model.AccountId" class="btn btn-primary btn-success w-100 mb-2">Edit</a>
-            <a asp-action="Delete" asp-route-id="@Model.AccountId" class="btn btn-danger w-100 mb-2">Delete</a>
+            <a asp-action="Edit" asp-route-id="@Model.Account.AccountId" class="btn btn-success w-100 mb-2">Edit</a>
+            <a asp-action="Delete" asp-route-id="@Model.Account.AccountId" class="btn btn-danger w-100 mb-2">Delete</a>
             <a asp-controller="Home" asp-action="Index" class="btn btn-secondary w-100 mb-2">Back</a>
 
             <!-- Logout Button -->

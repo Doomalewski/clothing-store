@@ -1,0 +1,48 @@
+﻿@model OrderDetailsDto
+
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+<div class="container mt-5">
+    <h1 class="text-center text-black mb-4" style="font-weight: bold;">Order Details</h1>
+
+    <div class="p-4 rounded" style="background-color: #000; color: #fff; max-width: 800px; margin: 0 auto;">
+        <!-- Order Header -->
+        <h3 class="text-white">Order #@Model.OrderId</h3>
+        <p class="text-muted">Placed on: @Model.Date.ToString("yyyy-MM-dd")</p>
+        <p class="text-muted">Status: @Model.OrderStatus</p>
+        <p class="text-muted">Total Price: @Model.FullPrice.ToString("C")</p>
+
+        <p class="text-muted">Shipping Method: @Model.ShippingMethod</p>
+        <p class="text-muted">Payment Method: @Model.PaymentMethod</p>
+
+        <h4 class="text-white mt-4">Shipping Address</h4>
+        <p class="text-white">@Model.Address</p>
+
+        <h4 class="text-white mt-4">Products in Order</h4>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in Model.Products)
+                {
+                    <tr>
+                        <td>@product.ProductName</td>
+                        <td>@product.Quantity</td>
+                        <td>@product.Price.ToString("C")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="text-center mt-4">
+            <a asp-controller="Account" asp-action="Details" class="btn btn-secondary">Back to Account</a>
+        </div>
+    </div>
+</div>

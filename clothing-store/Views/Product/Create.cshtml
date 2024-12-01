@@ -3,7 +3,7 @@
 <div class="container mt-5">
     <h2 class="text-black text-center mb-4">Dodaj nowy produkt</h2>
 
-    <form asp-action="Create" method="post" class="p-4 rounded shadow-lg" style="background-color: #000; color: white;">
+    <form asp-action="Create" method="post" enctype="multipart/form-data" class="p-4 rounded shadow-lg" style="background-color: #000; color: white;">
         <div class="mb-3">
             <label for="Name" class="form-label">Nazwa produktu:</label>
             <input type="text" id="Name" name="Name" class="form-control" placeholder="Wprowadź nazwę produktu" required />
@@ -45,7 +45,10 @@
                 }
             </select>
         </div>
-
+        <div class="mb-3">
+            <label for="Photos" class="form-label">Zdjęcia produktu:</label>
+            <input type="file" id="Photos" name="Photos" class="form-control" multiple />
+        </div>
         <div class="form-check mb-3">
             <input type="checkbox" id="Visible" name="Visible" class="form-check-input" asp-for="Visible" />
             <label for="Visible" class="form-check-label">Widoczność:</label>

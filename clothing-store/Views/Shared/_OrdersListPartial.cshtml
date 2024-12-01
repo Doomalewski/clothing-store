@@ -1,0 +1,27 @@
+﻿@model IEnumerable<OrderSummaryDto>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Data</th>
+            <th>Status</th>
+            <th>Kwota</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr >
+                <td>@order.OrderId</td>
+                <td>@order.Date.ToString("yyyy-MM-dd")</td>
+                <td>@order.OrderStatus</td>
+                <td>@order.FullPrice.ToString("C")</td>
+                <td>
+                    <a asp-controller="Order" asp-action="Details" asp-route-id="@order.OrderId" class="btn btn-info btn-sm">Szczegóły</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

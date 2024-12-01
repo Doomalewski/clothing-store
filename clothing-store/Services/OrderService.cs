@@ -1,4 +1,5 @@
 ﻿using clothing_store.Interfaces;
+using clothing_store.Models;
 
 namespace clothing_store.Services
 {
@@ -28,6 +29,15 @@ namespace clothing_store.Services
         public async Task<PaymentMethod> GetPaymentMethodByIdAsync(int paymentMethodId)
         {
             return await _orderRepository.GetPaymentMethodByIdAsync(paymentMethodId);
+        }
+        public async Task AddOrderProductAsync(OrderProduct orderProduct) => await _orderRepository.AddOrderProductAsync(orderProduct);
+        public async Task<List<Order>> GetOrdersByAccountIdAsync(int accountId)
+        {
+            return await _orderRepository.GetOrdersByAccountIdAsync(accountId);
+        }
+        public async Task<Order> GetOrderByIdAsync(int orderId)
+        {
+            return await _orderRepository.GetOrderByIdAsync(orderId);
         }
     }
 }

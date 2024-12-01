@@ -18,5 +18,6 @@ namespace clothing_store.Interfaces
         public Task ClearBasketAsync(int accountId);
         public Task<Address> GetAddressByIdAsync(int addressId);
 
-    }   
+
+    }
 }

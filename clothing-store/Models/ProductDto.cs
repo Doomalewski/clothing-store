@@ -9,6 +9,9 @@
         public int TaxId { get; set; }
         public bool Visible { get; set; }
         public int Quantity { get; set; }
+
+        public List<IFormFile> Photos { get; set; } = new List<IFormFile>();
+
     }
 
 }

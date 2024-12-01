@@ -14,7 +14,8 @@ namespace clothing_store.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IBasketRepository _basketRepository;
         private readonly IAddressRepository _addressRepository;
-        public AccountService(IAccountRepository accountRepository, IConfiguration configuration,IHttpContextAccessor httpContext,IBasketRepository basketRepository,IAddressRepository addressRepository)
+        private readonly IOrderRepository _orderRepository;
+        public AccountService(IAccountRepository accountRepository, IConfiguration configuration,IHttpContextAccessor httpContext,IBasketRepository basketRepository,IAddressRepository addressRepository, IOrderRepository orderRepository)
         {
             _accountRepository = accountRepository;
             _passwordHasher = new PasswordHasher<string>();
@@ -22,6 +23,7 @@ namespace clothing_store.Services
             _httpContextAccessor = httpContext;
             _basketRepository = basketRepository;
             _addressRepository = addressRepository;
+            _orderRepository = orderRepository;
         }
         public async Task<Account> GetAccountByIdAsync(int accountId)
         {
@@ -74,6 +76,10 @@ namespace clothing_store.Services
         public async Task<Address> GetAddressByIdAsync(int addressId)
         {
             return await _addressRepository.GetAddressByIdAsync(addressId);
+        }
+        public async Task<List<Order>> GetOrdersByAccountIdAsync(int accountId)
+        {
+            return await _orderRepository.GetOrdersByAccountIdAsync(accountId);
         }
     }
 }
