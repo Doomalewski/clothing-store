@@ -8,68 +8,92 @@
     <div class="row">
         <!-- Continue Shopping Link -->
         <div class="col-12 mb-3">
-            <a asp-action="Index" asp-controller="Shop" class="text-decoration-none text-white">
+            <a asp-action="Index" asp-controller="Shop" class="text-decoration-none text-black">
                 ← Continue Shopping
             </a>
         </div>
     </div>
 
     <!-- Cart Title -->
-    <h1 class="text-center text-white mb-4" style="font-weight: bold;">The Shop</h1>
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center text-black mb-4" style="font-weight: bold;">Your Cart</h1>
+        </div>
+    </div>
 
     @if (Model.BasketProducts == null || !Model.BasketProducts.Any())
     {
-        <p class="text-center text-white">Your cart is empty.</p>
+        <div class="row">
+            <div class="col-12">
+                <p class="text-center text-white">Your cart is empty.</p>
+            </div>
+        </div>
     }
     else
     {
         <div class="row">
-            <div class="col-lg-8">
-                <!-- Cart Items -->
+            <!-- Cart Items -->
+            <div class="col-lg-8 col-md-12 mb-4">
                 @foreach (var item in Model.BasketProducts)
                 {
-                    <div class="mb-4 p-3 rounded shadow-lg" style="background-color: #000;">
-                        <div class="row align-items-center">
-                            <img src="~/Images/edzio.jpg" alt="@item.Product.Name" class="img-fluid rounded" style="width:200px; height:200px;" />
-                            <div class="col-md-3">
-                        
-                            </div>
+                    <div class="row align-items-center mb-4  rounded shadow-lg" style="padding: 0; margin: 0;background-color: #000;">
+                        <!-- Image -->
+                        <div class="col-2 px-0 d-flex align-items-start" style="padding: 0; margin: 0; background-color: transparent; overflow: hidden; border-radius: 3px 0 0 3px;">
+                            <img src="~/Images/edzio.jpg" alt="@item.Product.Name" style="width: 120px; height: 120px; object-fit: cover; margin: 0; padding: 0; display: block;" />
+                        </div>
 
-                            <!-- Product Details -->
-                            <div class="col-md-5">
-                                <h4 class="text-white">@item.Product.Name</h4>
-                                <p class="text-muted">@item.Product.Description</p>
-                            </div>
 
-                            <!-- Quantity and Actions -->
-                            <div class="col-md-2 text-center">
-                                <div class="d-flex align-items-center justify-content-center">
-                                    <form asp-action="UpdateCart" method="post" class="d-inline">
-                                        <input type="hidden" name="ProductId" value="@item.ProductId" />
-                                        <button type="submit" name="action" value="decrement" class="btn btn-outline-light btn-sm">-</button>
-                                        <span class="mx-2 text-white">@item.Quantity</span>
-                                        <button type="submit" name="action" value="increment" class="btn btn-outline-light btn-sm">+</button>
-                                    </form>
-                                </div>
-                                <p class="text-white mt-2">@item.Product.Price.ToString("C")</p>
-                            </div>
 
-                            <!-- Remove Item -->
-                            <div class="col-md-2 text-center">
-                                <form asp-action="RemoveFromCart" method="post">
-                                    <input type="hidden" name="ProductId" value="@item.ProductId" />
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </div>
+
+
+
+                        <!-- Product Details -->
+                        <div class="col-4">
+                            <h4 class="text-white mb-1">@item.Product.Name</h4>
+                            <p class="text-muted mb-1">@item.Product.Price.ToString("C")</p>
+                        </div>
+
+                        <!-- Quantity Controls -->
+                        <div class="col-3 text-center">
+                            <form asp-action="UpdateCart" method="post" class="d-inline">
+                                <input type="hidden" name="ProductId" value="@item.ProductId" />
+                                <!-- Decrement Button -->
+                                <button type="submit" name="action" value="decrement"
+                                        class="btn btn-sm"
+                                        style="width: 40px; height: 40px; background-color: white; color: black; border: 1px solid black; font-weight: bold;">
+                                    -
+                                </button>
+                                <!-- Quantity Display -->
+                                <span class="mx-2 text-white" style="width: 40px; text-align: center;">@item.Quantity</span>
+                                <!-- Increment Button -->
+                                <button type="submit" name="action" value="increment"
+                                        class="btn btn-sm"
+                                        style="width: 40px; height: 40px; background-color: white; color: black; border: 1px solid black; font-weight: bold;">
+                                    +
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="col-2 text-center">
+                            <p class="text-white mb-0">@((item.Product.Price * item.Quantity).ToString("C"))</p>
+                        </div>
+
+                        <!-- Remove Button -->
+                        <div class="col-1 text-center">
+                            <form asp-action="RemoveFromCart" method="post">
+                                <input type="hidden" name="ProductId" value="@item.ProductId" />
+                                <button type="submit" class="btn btn-sm" style="background-color: red; border: none; padding: 5px;">
+                                    <img src="~/Images/bin button.png" alt="Remove" style="width: 20px; height: 20px; object-fit: contain; filter: invert(1);" />
+                                </button>
+                            </form>
                         </div>
                     </div>
                 }
             </div>
 
             <!-- Summary Section -->
-            <div class="col-lg-4">
+            <div class="col-lg-4 col-md-12">
                 <div class="p-3 rounded shadow-lg" style="background-color: #000;">
                     <h4 class="text-white">Summary</h4>
                     <p class="text-white">Shipping, taxes, and discounts calculated at checkout.</p>
@@ -87,3 +111,5 @@
         </div>
     }
 </div>
+
+
