@@ -4,104 +4,84 @@
 @{
     ViewData["Title"] = "Account Details";
 }
-
-<div class="container mt-5">
-    <h1 class="text-center text-black mb-4" style="font-weight: bold;">Account Details</h1>
-
-    <div class="p-4 rounded" style="background-color: #000; color: #fff; max-width: 600px; margin: 0 auto;">
-        <!-- Profile Section -->
-        <div class="text-center mb-4">
-            <h2 class="text-white" style="font-size: 1.5rem;">@Model.Account.Username</h2>
-            <p class="text-muted" style="font-size: 1rem;">@Model.Account.Email</p>
-        </div>
-
-        <!-- Details Section -->
-        <div class="mb-4">
-            <h3 class="text-white" style="font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem;">Personal Information</h3>
-
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label class="form-label">First Name</label>
-                    <input type="text" class="form-control bg-dark text-white" value="@Model.Account.Name" readonly>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Last Name</label>
-                    <input type="text" class="form-control bg-dark text-white" value="@Model.Account.Surname" readonly>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label class="form-label">Age</label>
-                    <input type="text" class="form-control bg-dark text-white" value="@Model.Account.Age" readonly>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Gender</label>
-                    <input type="text" class="form-control bg-dark text-white" value="@(Model.Account.Sex ? "Male" : "Female")" readonly>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label class="form-label">Height</label>
-                    <input type="text" class="form-control bg-dark text-white" value="@Model.Account.Height cm" readonly>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Weight</label>
-                    <input type="text" class="form-control bg-dark text-white" value="@Model.Account.Weight kg" readonly>
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<div class="container-fluid p-0">
+    <div class="row g-0">
+        <!-- Settings Section -->
+        <!-- Static Sidebar Section -->
+        <div class="col-md-3">
+            <div class="settings-section bg-white text-black">
+                <div class="p-3">
+                    <h4 class="text-center mb-4">Account</h4>
+                    <ul class="list-unstyled text-start">
+                    
+                        <li class="mb-3"><a asp-controller="Account" asp-action="Details" class="text-black d-block @((ViewContext.RouteData.Values["Action"].ToString() == "Details") ? "fw-bold" : "")">Details</a></li>
+                        <li class="mb-3"><a asp-controller="Account" asp-action="Preferences" class="text-black d-block @((ViewContext.RouteData.Values["Action"].ToString() == "Preferences") ? "fw-bold" : "")">Preferences</a></li>
+                        <li class="mb-3"><a asp-controller="Account" asp-action="Newsletter" class="text-black d-block @((ViewContext.RouteData.Values["Action"].ToString() == "Newsletter") ? "fw-bold" : "")">Newsletter</a></li>
+                        <li class="mb-3"><a asp-controller="Account" asp-action="Orders" class="text-black d-block @((ViewContext.RouteData.Values["Action"].ToString() == "Orders") ? "fw-bold" : "")">Orders</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
 
-        <!-- Preferences Section -->
-        <div class="mb-4">
-            <h3 class="text-white" style="font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem;">Preferences</h3>
+        <!-- Main Content Section -->
+        <div class="col-md-9">
+            <h1 class="text-center text-black mb-4" style="font-weight: bold;">Account Details</h1>
 
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label class="form-label">Favorite Color</label>
-                    <input type="text" class="form-control bg-dark text-white" value="@Model.Account.FavouriteColor" readonly>
+            <div class="p-4 rounded" style="background-color: #000; color: #fff;">
+                <!-- Profile Section -->
+                <div class="text-center mb-4">
+                    <h2 class="text-white" style="font-size: 1.5rem;">@Model.Account.Username</h2>
+                    <p class="text-muted" style="font-size: 1rem;">@Model.Account.Email</p>
                 </div>
-                <div class="col-md-6">
-                    <label class="form-label">Newsletter</label>
-                    <input type="text" class="form-control bg-dark text-white" value="@(Model.Account.Newsletter ? "Subscribed" : "Not Subscribed")" readonly>
+
+                <!-- Details Section -->
+                <div class="mb-4">
+                    <h3 class="text-white" style="font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem;">Personal Information</h3>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">First Name</label>
+                            <input type="text" class="form-control bg-dark text-white" value="@Model.Account.Name" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" class="form-control bg-dark text-white" value="@Model.Account.Surname" readonly>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Age</label>
+                            <input type="text" class="form-control bg-dark text-white" value="@Model.Account.Age" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Gender</label>
+                            <input type="text" class="form-control bg-dark text-white" value="@(Model.Account.Sex ? "Male" : "Female")" readonly>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Height</label>
+                            <input type="text" class="form-control bg-dark text-white" value="@Model.Account.Height cm" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Weight</label>
+                            <input type="text" class="form-control bg-dark text-white" value="@Model.Account.Weight kg" readonly>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label class="form-label">Corporate Client</label>
-                    <input type="text" class="form-control bg-dark text-white" value="@(Model.Account.CorporateClient ? "Yes" : "No")" readonly>
+                
+
+                <!-- Address Section -->
+                <div class="mb-4">
+                    <h3 class="text-white" style="font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem;">Address</h3>
+                    <textarea class="form-control bg-dark text-white" rows="2" readonly>
+                        @(Model.Account.Address != null ? $"{Model.Account.Address.Street}, {Model.Account.Address.City}" : "No assigned address")
+                    </textarea>
                 </div>
+
+                
             </div>
-        </div>
-
-        <!-- Address Section -->
-        <div class="mb-4">
-            <h3 class="text-white" style="font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem;">Address</h3>
-            <textarea class="form-control bg-dark text-white" rows="2" readonly>
-                @(Model.Account.Address != null ? $"{Model.Account.Address.Street}, {Model.Account.Address.City}" : "No assigned address")
-            </textarea>
-        </div>
-
-        <!-- Orders Section -->
-        <div class="mb-4">
-            <h3 class="text-white" style="font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem;">Orders</h3>
-            <div id="ordersList">
-                @await Html.PartialAsync("_OrdersListPartial", Model.Orders)
-            </div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="text-center">
-            <a asp-action="Edit" asp-route-id="@Model.Account.AccountId" class="btn btn-success w-100 mb-2">Edit</a>
-            <a asp-action="Delete" asp-route-id="@Model.Account.AccountId" class="btn btn-danger w-100 mb-2">Delete</a>
-            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary w-100 mb-2">Back</a>
-
-            <!-- Logout Button -->
-            <form asp-action="Logout" method="post" style="display:inline;">
-                <button type="submit" class="btn btn-danger w-100">Logout</button>
-            </form>
         </div>
     </div>
 </div>

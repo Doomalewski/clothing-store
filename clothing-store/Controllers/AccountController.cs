@@ -211,7 +211,7 @@ namespace clothing_store.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-
+        
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
@@ -240,6 +240,80 @@ namespace clothing_store.Controllers
 
             return View(viewModel);
         }
+        [HttpGet]
+        public async Task<IActionResult> Preferences()
+        {
+            var account = await _accountService.GetAccountFromHttpAsync();
+
+            if (account == null)
+            {
+                return NotFound();
+            }
+
+            // Create a ViewModel if needed
+            var viewModel = new AccountDetailsViewModel
+            {
+                Account = account
+            };
+
+            return View(viewModel);
+        }
+        [HttpGet]
+        [HttpGet]
+        public async Task<IActionResult> Orders()
+        {
+            var account = await _accountService.GetAccountFromHttpAsync();
+            if (account == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new AccountDetailsViewModel
+            {
+                Account = account,
+                Orders = account.Orders.Select(o => new OrderSummaryDto
+                {
+                    OrderId = o.OrderId,
+                    Date = o.Date,
+                    OrderStatus = o.OrderStatus,
+                    FullPrice = o.FullPrice
+                }).ToList()
+            };
+
+            return View(viewModel);
+        }
+        [HttpGet]
+public async Task<IActionResult> Newsletter()
+{
+    var account = await _accountService.GetAccountFromHttpAsync();
+    if (account == null)
+    {
+        return NotFound();
+    }
+
+    var viewModel = new AccountDetailsViewModel
+    {
+        Account = account
+    };
+
+    return View(viewModel);
+}
+
+
+[HttpPost]
+public async Task<IActionResult> ToggleNewsletterSubscription()
+{
+    var account = await _accountService.GetAccountFromHttpAsync();
+    if (account == null)
+    {
+        return NotFound();
+    }
+
+    account.Newsletter = !account.Newsletter;
+    //await _accountService.UpdateAccountAsync(account);
+
+    return RedirectToAction("Newsletter");
+}
 
         [HttpPost]
         public async Task<IActionResult> AddProductToCart(int id)

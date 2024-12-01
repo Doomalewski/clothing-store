@@ -2,12 +2,13 @@
 @model AccountDetailsViewModel
 
 @{
-    ViewData["Title"] = "Orders";
+    ViewData["Title"] = "Newsletter";
 }
 <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
 <div class="container-fluid p-0">
     <div class="row g-0">
+
         <div class="col-md-3">
             <div class="settings-section bg-white text-black">
                 <div class="p-3">
@@ -23,18 +24,29 @@
             </div>
         </div>
 
-        <!-- Orders Content Section -->
+        <!-- Newsletter Content Section -->
         <div class="col-md-9">
-            <h1 class="text-center text-black mb-4" style="font-weight: bold;">Orders</h1>
+            <h1 class="text-center text-black mb-4" style="font-weight: bold;">Newsletter</h1>
 
             <div class="p-4 rounded" style="background-color: #000; color: #fff;">
-                <h3 class="text-white" style="font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem;">Your Orders</h3>
+                <h3 class="text-white" style="font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem;">Newsletter Subscription</h3>
 
-                <div class="mb-4">
-                    <h3 class="text-white" style="font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem;">Orders</h3>
-                    <div id="ordersList">
-                        @await Html.PartialAsync("_OrdersListPartial", Model.Orders)
-                    </div>
+                <div>
+                    <p class="text-white">
+                       
+                        
+                            You are currently subscribed to our newsletter.
+                        
+                        else
+                        
+                            You are not subscribed to our newsletter.
+                        
+                    </p>
+                    <form >
+                        <button type="submit" class="btn btn-primary">
+                            @(Model.Account.Newsletter ? "Unsubscribe" : "Subscribe")
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

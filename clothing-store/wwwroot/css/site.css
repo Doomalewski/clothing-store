@@ -141,3 +141,71 @@ footer {
     background-color: #111;
     color: #888;
 }
+
+.sidebar {
+    width: 250px;
+    background-color: #000; /* Black background */
+    color: #fff; /* White text */
+    padding: 20px;
+    height: calc(100vh); /* Full height minus navbar height */
+    position: fixed; /* Fix sidebar to the left */
+    top: 50px; /* Align with the navbar (bootstrap default navbar height is 56px) */
+    left: 0;
+    overflow-y: auto; /* Scrollable content if necessary */
+    border-right: 1px solid #333; /* Optional border for separation */
+}
+
+/* Sidebar Title */
+.sidebar-title {
+    font-size: 22px; /* Larger font size */
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+/* Sidebar Menu */
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Sidebar Menu Items */
+.sidebar-menu li {
+    margin-bottom: 15px; /* Space between items */
+}
+
+.sidebar-menu li a {
+    text-decoration: none; /* Remove underline */
+    color: #fff; /* White text */
+    font-size: 18px; /* Larger font size */
+    font-weight: bold; /* Bold text */
+    padding: 10px 15px; /* Padding for clickable area */
+    display: block; /* Full-width clickable area */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth hover effects */
+}
+
+/* Hover and Active States */
+.sidebar-menu li a:hover,
+.sidebar-menu li a.active {
+    background-color: #333; /* Dark gray background on hover */
+    color: #007bff; /* Blue text on hover */
+}
+/* Ensure the main content aligns with the sidebar */
+.main-container {
+    margin-left: 250px; /* Offset the content to the right of the sidebar */
+    margin-top: 50px; /* Align with the navbar */
+    padding: 20px;
+}
+
+/* Ensure the settings section spans the entire page height */
+.settings-section {
+    min-height: 100vh; /* Full viewport height */
+    position: sticky;
+    top: 0; /* Keeps it aligned with the top */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Start from the top */
+}
