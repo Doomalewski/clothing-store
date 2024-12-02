@@ -8,6 +8,8 @@
         public Task DeleteAccountByIdAsync(int id);
         public Task DeleteAccountAsync(Account account);
         public Task<Account> GetAccountByEmailAsync(string email);
+        public Task UpdateResetTokenAsync(int accountId, string token, DateTime expiration);
+        public Task UpdatePasswordAndClearTokenAsync(int accountId, string hashedPassword);
 
     }
 }

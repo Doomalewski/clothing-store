@@ -52,6 +52,30 @@ namespace clothing_store.Repositories
                  .FirstOrDefaultAsync(a => a.Email == email);
             return account;
         }
+        public async Task UpdateResetTokenAsync(int accountId, string token, DateTime expiration)
+        {
+            var account = await GetAccountByIdAsync(accountId);
+            if (account != null)
+            {
+                account.ResetToken = token;
+                account.ResetTokenExpiration = expiration;
+                _context.Accounts.Update(account);
+                await _context.SaveChangesAsync();
+            }
+        }
+        public async Task UpdatePasswordAndClearTokenAsync(int accountId, string hashedPassword)
+        {
+            var account = await GetAccountByIdAsync(accountId);
+            if (account != null)
+            {
+                account.Password = hashedPassword;
+                account.ResetToken = "";
+                account.ResetTokenExpiration = DateTime.UtcNow;
+
+                _context.Accounts.Update(account); // Lub trackowanie encji, jeśli automatyczne
+                await _context.SaveChangesAsync();
+            }
+        }
 
     }
 }

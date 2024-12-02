@@ -83,7 +83,9 @@ namespace clothing_store.Controllers
                 Discounts = new List<SpecialDiscount>(),
                 CorporateClient = false,
                 Newsletter = false,
-                Role = "User"
+                Role = "User",
+                ResetToken = "",
+                ResetTokenExpiration = DateTime.UtcNow,
             };
             await _accountService.AddAccountAsync(account);
             await _emailService.SendConfirmationEmail(model.Username);
@@ -454,8 +456,74 @@ public async Task<IActionResult> ToggleNewsletterSubscription()
             // 9. Przekierowanie do strony potwierdzenia zamówienia
             return RedirectToAction("OrderConfirmation", new { orderId = order.OrderId });
         }
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                TempData["Message"] = "Email is required.";
+                return RedirectToAction("ForgotPassword");
+            }
+
+            var account = await _accountService.GetAccountByEmailAsync(email);
+            if (account == null)
+            {
+                TempData["Message"] = "User not found.";
+                return RedirectToAction("ForgotPassword");
+            }
+
+            var token = await _accountService.GeneratePasswordResetTokenAsync(account.AccountId);
+            var callbackUrl = Url.Action("ResetPassword", "Account",
+                new { token, email = account.Email }, Request.Scheme);
+
+            await _emailService.SendForgotPasswordEmail(email, callbackUrl);
+
+            TempData["Message"] = "An email with reset instructions has been sent.";
+            return RedirectToAction("ForgotPassword");
+        }
 
 
 
+        [HttpGet]
+        public IActionResult ResetPassword(string token, string email)
+        {
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(email))
+            {
+                return BadRequest("Invalid password reset token or email.");
+            }
+
+            var model = new ResetPasswordViewModel
+            {
+                Token = token,
+                Email = email
+            };
+
+            return View(model); // Widok z formularzem wprowadzania nowego hasła
+        }
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var account = await _accountService.GetAccountByEmailAsync(model.Email);
+            if (account == null || !await _accountService.ValidateResetTokenAsync(account.AccountId, model.Token))
+            {
+                ModelState.AddModelError("", "Invalid or expired token.");
+                return View(model);
+            }
+
+            var resetResult = await _accountService.ResetPasswordAsync(account.AccountId, model.Token, model.NewPassword);
+            if (!resetResult)
+            {
+                ModelState.AddModelError("", "Invalid token or password reset failed.");
+                return View(model);
+            }
+
+            TempData["Message"] = "Your password has been reset successfully.";
+            return RedirectToAction("Login");
+        }
     }
 }

@@ -17,7 +17,9 @@ namespace clothing_store.Interfaces
         public Task<Account> GetAccountFromHttpAsync();
         public Task ClearBasketAsync(int accountId);
         public Task<Address> GetAddressByIdAsync(int addressId);
-
+        public Task<string> GeneratePasswordResetTokenAsync(int accountId);
+        public Task<bool> ResetPasswordAsync(int accountId, string token, string newPassword);
+        public Task<bool> ValidateResetTokenAsync(int accountId, string token);
 
     }
 }

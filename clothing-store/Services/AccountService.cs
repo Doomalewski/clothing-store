@@ -81,5 +81,45 @@ namespace clothing_store.Services
         {
             return await _orderRepository.GetOrdersByAccountIdAsync(accountId);
         }
+        public async Task<string> GeneratePasswordResetTokenAsync(int accountId)
+        {
+            var account = await _accountRepository.GetAccountByIdAsync(accountId);
+            if (account == null) throw new ArgumentException("Account not found.");
+
+            // Generowanie tokenu
+            var token = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+            var expiration = DateTime.UtcNow.AddHours(1);
+
+            await _accountRepository.UpdateResetTokenAsync(accountId, token, expiration);
+
+            return token;
+        }
+
+        public async Task<bool> ResetPasswordAsync(int accountId, string token, string newPassword)
+        {
+            var account = await _accountRepository.GetAccountByIdAsync(accountId);
+            if (account == null || account.ResetToken != token || account.ResetTokenExpiration < DateTime.UtcNow)
+            {
+                return false; // Token nieważny
+            }
+
+            var hashedPassword = SaltAndHashPassword(newPassword);
+            await _accountRepository.UpdatePasswordAndClearTokenAsync(accountId, hashedPassword);
+
+            return true;
+        }
+
+
+        public async Task<bool> ValidateResetTokenAsync(int accountId, string token)
+        {
+            var account = await _accountRepository.GetAccountByIdAsync(accountId);
+            if (account == null || account.ResetToken != token || account.ResetTokenExpiration < DateTime.UtcNow)
+            {
+                return false; // Token jest nieważny lub nie istnieje
+            }
+
+            return true;
+        }
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using clothing_store.Interfaces;
+using clothing_store.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,11 +10,14 @@ namespace clothing_store.Controllers
     {
         private readonly IAccountService _accountService;
         private readonly ICurrencyService _currencyService; // Dodajemy ICurrencyService
-
-        public AdminController(IAccountService accountService, ICurrencyService currencyService)
+        private readonly IProductService _productService;
+        private readonly IPDFService _pdfService;
+        public AdminController(IAccountService accountService, ICurrencyService currencyService, IProductService productService, IPDFService pdfService)
         {
             _accountService = accountService;
             _currencyService = currencyService;
+            _productService = productService;
+            _pdfService = pdfService;
         }
 
         public IActionResult Dashboard()
@@ -79,6 +83,15 @@ namespace clothing_store.Controllers
             await _currencyService.UpdateCurrencyRatesAsync();
             TempData["Message"] = "Kursy walut zostały zaktualizowane."; // Komunikat o sukcesie
             return RedirectToAction(nameof(Dashboard)); // Powrót na dashboard
+        }
+        [HttpGet]
+        public async Task<IActionResult> DownloadPriceList()
+        {
+            var products = await  _productService.GetAllProductsAsync();
+
+            var pdf = _pdfService.GenerateProductPriceListPdf(products);
+
+            return File(pdf, "application/pdf", "ProductPriceList.pdf");
         }
     }
 }

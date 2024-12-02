@@ -17,7 +17,7 @@ namespace clothing_store.Services
             var apiKey = _configuration.GetSection("EmailApiKey").Value;
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress("starsentstore@gmail.com", "StarSent");
-            var subject = "Sending with SendGrid is Fun";
+            var subject = "Account at StarSent";
             var to = new EmailAddress("paweldomalewski02@gmail.com", "domal");
             var templateId = "d-5da83691206a4e788dcfafe7af910429";
             var templateData = new { Name = name};
@@ -25,15 +25,15 @@ namespace clothing_store.Services
             var response = await client.SendEmailAsync(msg);
             Console.WriteLine(response.StatusCode);
         }
-        public async Task SendOrderConfirmationEmail(string name)
+        public async Task SendForgotPasswordEmail(string name, string url)
         {
             var apiKey = _configuration.GetSection("EmailApiKey").Value;
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress("starsentstore@gmail.com", "StarSent");
-            var subject = "Sending with SendGrid is Fun";
+            var subject = "Your password reset link";
             var to = new EmailAddress("paweldomalewski02@gmail.com", "domal");
-            var templateId = "d-5da83691206a4e788dcfafe7af910429";
-            var templateData = new { Name = name };
+            var templateId = "d-d6945322db8d44eb938196b8793f28a6";
+            var templateData = new { Link = url };
             var msg = MailHelper.CreateSingleTemplateEmail(from, to, templateId, templateData);
             var response = await client.SendEmailAsync(msg);
             Console.WriteLine(response.StatusCode);

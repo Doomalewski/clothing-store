@@ -19,6 +19,10 @@
                         <li class="mb-3"><a asp-controller="Account" asp-action="Preferences" class="text-black d-block @((ViewContext.RouteData.Values["Action"].ToString() == "Preferences") ? "fw-bold" : "")">Preferences</a></li>
                         <li class="mb-3"><a asp-controller="Account" asp-action="Newsletter" class="text-black d-block @((ViewContext.RouteData.Values["Action"].ToString() == "Newsletter") ? "fw-bold" : "")">Newsletter</a></li>
                         <li class="mb-3"><a asp-controller="Account" asp-action="Orders" class="text-black d-block @((ViewContext.RouteData.Values["Action"].ToString() == "Orders") ? "fw-bold" : "")">Orders</a></li>
+                        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-link text-black d-block">Logout</button>
+                        </form>
+
                     </ul>
                 </div>
             </div>
