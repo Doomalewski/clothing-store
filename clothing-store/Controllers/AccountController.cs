@@ -403,6 +403,8 @@ public async Task<IActionResult> ToggleNewsletterSubscription()
             if (basket == null || !basket.BasketProducts.Any())
             {
                 ModelState.AddModelError("", "Basket is empty.");
+                ViewBag.shippingMethods = await _orderService.GetAllShippingMethodsAsync();
+                ViewBag.paymentMethods = await _orderService.GetAllPaymentMethodsAsync();
                 return View(model);
             }
 
@@ -414,9 +416,25 @@ public async Task<IActionResult> ToggleNewsletterSubscription()
                                             string.IsNullOrEmpty(model.Country)))
             {
                 ModelState.AddModelError("", "All address fields are required when choosing a new address.");
+                ViewBag.shippingMethods = await _orderService.GetAllShippingMethodsAsync();
+                ViewBag.paymentMethods = await _orderService.GetAllPaymentMethodsAsync();
                 return View(model);
             }
+            foreach (var item in basket.BasketProducts)
+            {
+                var product = await _productService.GetProductByIdAsync(item.ProductId);
+                if (product == null)
+                {
+                    ModelState.AddModelError("", $"Product with ID {item.ProductId} not found.");
+                    return View(model);
+                }
 
+                if (product.Quantity < item.Quantity)
+                {
+                    ModelState.AddModelError("", $"Insufficient stock for product: {product.Name}. Available: {product.Quantity}, Requested: {item.Quantity}");
+                    return View(model);
+                }
+            }
             // 5. Utworzenie zamówienia
             var order = new Order
             {
@@ -436,6 +454,12 @@ public async Task<IActionResult> ToggleNewsletterSubscription()
 
             // 6. Zapisanie zamówienia w bazie danych
             await _orderService.AddOrderAsync(order);
+            foreach (var item in basket.BasketProducts)
+            {
+                var productToUpdate = await _productService.GetProductByIdAsync(item.ProductId);
+                productToUpdate.Quantity -= item.Quantity;
+                await _productService.UpdateProductAsync(productToUpdate);
+            }
 
             // 7. Dodanie produktów do zamówienia
             foreach (var item in basket.BasketProducts)
