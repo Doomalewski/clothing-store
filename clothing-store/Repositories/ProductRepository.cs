@@ -56,6 +56,11 @@ namespace clothing_store.Repositories
             _context.Products.Update(product);
             await _context.SaveChangesAsync();
         }
+        public async Task DeleteProductAsync(Product product)
+        {
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
+        }
 
     }
 }

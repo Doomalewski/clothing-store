@@ -23,7 +23,31 @@ namespace clothing_store.Controllers
         {
             var products = await _productService.GetAllProductsAsync();
             var currencies = await _currencyService.GetAllCurrenciesAsync();
+            var bestsellers = products.OrderByDescending(t => t.TimesBought).Take(10).ToList();
+            // Pobierz wybran¹ walutê z ciasteczek lub domyœlnie ustaw PLN
+            var preferredCurrencyCode = Request.Cookies["PreferredCurrency"] ?? "PLN";
 
+            var preferredCurrency = currencies.FirstOrDefault(c => c.Code == preferredCurrencyCode);
+            if (preferredCurrency == null)
+            {
+                preferredCurrency = currencies.FirstOrDefault(c => c.Code == "PLN");
+            }
+
+            var productViewModels = bestsellers.Select(product => new ProductViewModel
+            {
+                ProductId = product.ProductId,
+                Name = product.Name,
+                Currency = preferredCurrency,
+                Price = product.Price,
+                ConvertedPrice = Math.Round(product.Price/preferredCurrency.Rate,2)
+            }).ToList();
+
+            return View(productViewModels);
+        }
+        public async Task<IActionResult> Products()
+        {
+            var products = await _productService.GetAllProductsAsync();
+            var currencies = await _currencyService.GetAllCurrenciesAsync();
             // Pobierz wybran¹ walutê z ciasteczek lub domyœlnie ustaw PLN
             var preferredCurrencyCode = Request.Cookies["PreferredCurrency"] ?? "PLN";
 
@@ -39,7 +63,7 @@ namespace clothing_store.Controllers
                 Name = product.Name,
                 Currency = preferredCurrency,
                 Price = product.Price,
-                ConvertedPrice = Math.Round(product.Price/preferredCurrency.Rate,2)
+                ConvertedPrice = Math.Round(product.Price / preferredCurrency.Rate, 2)
             }).ToList();
 
             return View(productViewModels);

@@ -1,6 +1,4 @@
-@{
-    ViewData["Title"] = "Delete Product";
-}
+@model Product
 
 <h2>Delete Product</h2>
 
@@ -21,8 +19,8 @@
     </dl>
 </div>
 
-<form asp-action="Delete" method="post">
-    <input type="hidden" id="Id" name="Id" value="1" />
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" id="Id" name="Id" value="@Model.ProductId" />
     <button type="submit" class="btn btn-danger">Delete</button>
     <a asp-action="Index" class="btn btn-secondary">Cancel</a>
 </form>

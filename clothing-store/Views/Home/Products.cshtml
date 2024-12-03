@@ -1,0 +1,8 @@
+﻿@model List<clothing_store.ViewModels.ProductViewModel>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+<div id="product-section">
+    @await Html.PartialAsync("_ProductListPartial", Model)
+</div>

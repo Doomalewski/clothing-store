@@ -59,8 +59,7 @@ namespace clothing_store.Controllers
                     if (photo.Length > 0)
                     {
                         // Generowanie nowej nazwy pliku na podstawie nazwy produktu
-                        var fileExtension = Path.GetExtension(photo.FileName);
-                        var newFileName = $"{dto.Name}{uploadedFileNames.Count + 1}{fileExtension}";
+                        var newFileName = $"{dto.Name}{uploadedFileNames.Count + 1}{".jpg"}";
 
                         // Ścieżka do zapisu pliku
                         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", newFileName);
@@ -134,24 +133,20 @@ namespace clothing_store.Controllers
         }
 
         // GET: ProductController/Delete/5
-        public ActionResult Delete(int id)
+        [HttpGet]
+        public async Task<ActionResult> Delete(int id)
         {
-            return View();
+            var productToDelete = await _productService.GetProductByIdAsync(id);
+            return View(productToDelete);
         }
 
         // POST: ProductController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            await _productService.DeleteProductByIdAsync(id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
