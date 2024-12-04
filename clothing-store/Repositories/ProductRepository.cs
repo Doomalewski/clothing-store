@@ -2,6 +2,7 @@
 using clothing_store.Models;
 using clothing_store.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 
 namespace clothing_store.Repositories
 {
@@ -61,6 +62,22 @@ namespace clothing_store.Repositories
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
         }
-
+        
+        public async Task<List<Product>> GetAllNewProductsAsync()
+        {
+            return await _context.Products
+                .Include(p => p.Brand)
+                .Include(t => t.Tax)
+                .Where(p =>p.New==true)
+                .ToListAsync();
+        }
+        public async Task<List<Product>> GetAllOldProductsAsync()
+        {
+            return await _context.Products
+                .Include(p => p.Brand)
+                .Include(t => t.Tax)
+                .Where(p => p.New == false)
+                .ToListAsync();
+        }
     }
 }

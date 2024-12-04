@@ -39,7 +39,8 @@ namespace clothing_store.Controllers
                 Name = product.Name,
                 Currency = preferredCurrency,
                 Price = product.Price,
-                ConvertedPrice = Math.Round(product.Price/preferredCurrency.Rate,2)
+                ConvertedPrice = Math.Round(product.Price/preferredCurrency.Rate,2),
+                New = product.New
             }).ToList();
 
             return View(productViewModels);
@@ -63,7 +64,8 @@ namespace clothing_store.Controllers
                 Name = product.Name,
                 Currency = preferredCurrency,
                 Price = product.Price,
-                ConvertedPrice = Math.Round(product.Price / preferredCurrency.Rate, 2)
+                ConvertedPrice = Math.Round(product.Price / preferredCurrency.Rate, 2),
+                New = product.New
             }).ToList();
 
             return View(productViewModels);

@@ -7,5 +7,6 @@
         public decimal Price { get; set; }
         public Currency Currency { get; set; } // Waluta dla ceny
         public decimal ConvertedPrice { get; set; } // Przeliczona cena
+        public bool New { get; set; }
     }
 }

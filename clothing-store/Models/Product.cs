@@ -50,8 +50,7 @@ namespace clothing_store.Models
 
         [Required]
         public bool New { get; set; }
-        [Required]
-        public DateTime TimePosted;
+
         [Required]
         public bool InStock { get; set; }
 
@@ -63,6 +62,7 @@ namespace clothing_store.Models
 
         public List<Opinion> Opinions { get; set; } = new List<Opinion>();
         public List<BasketProduct> BasketProducts { get; set; } = new List<BasketProduct>();
-
+        [Required]
+        public DateTime TimePosted { get; set; }
     }
 }

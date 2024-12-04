@@ -97,13 +97,15 @@ namespace clothing_store.Controllers
                 Photos = uploadedFileNames,
                 PinnedFiles = new List<LinkedFile>(),
                 New = true,
-                TimePosted = DateTime.Now,
+                TimePosted = DateTime.UtcNow,
                 Quantity = dto.Quantity,
                 TimesBought = 0,
                 InStock = true,
                 Opinions = new List<Opinion>()
             };
-
+            var productToRemoveFromNew = await _productService.GetOldestNewProductAsync();
+            productToRemoveFromNew.New = false;
+            await _productService.UpdateProductAsync(productToRemoveFromNew);
             await _productService.AddProductAsync(product);
 
             return RedirectToAction("Index");

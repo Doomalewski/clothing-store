@@ -13,8 +13,8 @@ using clothing_store.Models;
 namespace clothing_store.Migrations
 {
     [DbContext(typeof(StoreDbContext))]
-    [Migration("20241124112152_migracjaprodukt")]
-    partial class migracjaprodukt
+    [Migration("20241204123801_migracjatimeposted")]
+    partial class migracjatimeposted
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,7 +34,7 @@ namespace clothing_store.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AccountId"));
 
-                    b.Property<int?>("AddressId")
+                    b.Property<int>("AddressId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Age")
@@ -66,6 +66,13 @@ namespace clothing_store.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<string>("ResetToken")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ResetTokenExpiration")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Role")
                         .IsRequired()
@@ -129,25 +136,6 @@ namespace clothing_store.Migrations
                     b.HasKey("AddressId");
 
                     b.ToTable("Addresses");
-                });
-
-            modelBuilder.Entity("Basket", b =>
-                {
-                    b.Property<int>("BasketId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("BasketId"));
-
-                    b.Property<int>("AccountId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("BasketId");
-
-                    b.HasIndex("AccountId")
-                        .IsUnique();
-
-                    b.ToTable("Baskets");
                 });
 
             modelBuilder.Entity("Card", b =>
@@ -280,14 +268,19 @@ namespace clothing_store.Migrations
                     b.Property<int>("AccountId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("AddressId")
-                        .HasColumnType("integer");
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("FullPrice")
-                        .HasColumnType("integer");
+                    b.Property<decimal>("FullPrice")
+                        .HasColumnType("numeric");
 
                     b.Property<int>("OrderStatus")
                         .HasColumnType("integer");
@@ -301,11 +294,21 @@ namespace clothing_store.Migrations
                     b.Property<int>("ShippingMethodId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ZipCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("OrderId");
 
                     b.HasIndex("AccountId");
-
-                    b.HasIndex("AddressId");
 
                     b.HasIndex("PaymentMethodId");
 
@@ -384,6 +387,25 @@ namespace clothing_store.Migrations
                     b.ToTable("SpecialDiscounts");
                 });
 
+            modelBuilder.Entity("clothing_store.Models.Basket", b =>
+                {
+                    b.Property<int>("BasketId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("BasketId"));
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("BasketId");
+
+                    b.HasIndex("AccountId")
+                        .IsUnique();
+
+                    b.ToTable("Baskets");
+                });
+
             modelBuilder.Entity("clothing_store.Models.BasketProduct", b =>
                 {
                     b.Property<int>("BasketProductId")
@@ -407,7 +429,7 @@ namespace clothing_store.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("BasketProduct");
+                    b.ToTable("BasketProducts");
                 });
 
             modelBuilder.Entity("clothing_store.Models.Brand", b =>
@@ -447,9 +469,6 @@ namespace clothing_store.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Price")
-                        .HasColumnType("integer");
-
                     b.Property<int>("ProductId")
                         .HasColumnType("integer");
 
@@ -462,7 +481,7 @@ namespace clothing_store.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderProduct");
+                    b.ToTable("OrderProducts");
                 });
 
             modelBuilder.Entity("clothing_store.Models.Product", b =>
@@ -507,6 +526,9 @@ namespace clothing_store.Migrations
                     b.Property<int>("TaxId")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime>("TimePosted")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<int>("TimesBought")
                         .HasColumnType("integer");
 
@@ -550,20 +572,11 @@ namespace clothing_store.Migrations
                 {
                     b.HasOne("Address", "Address")
                         .WithMany()
-                        .HasForeignKey("AddressId");
-
-                    b.Navigation("Address");
-                });
-
-            modelBuilder.Entity("Basket", b =>
-                {
-                    b.HasOne("Account", "Account")
-                        .WithOne("Basket")
-                        .HasForeignKey("Basket", "AccountId")
+                        .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Account");
+                    b.Navigation("Address");
                 });
 
             modelBuilder.Entity("LinkedFile", b =>
@@ -588,12 +601,6 @@ namespace clothing_store.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("PaymentMethod", "Payment")
                         .WithMany()
                         .HasForeignKey("PaymentMethodId")
@@ -605,8 +612,6 @@ namespace clothing_store.Migrations
                         .HasForeignKey("ShippingMethodId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Address");
 
                     b.Navigation("ClientDetails");
 
@@ -622,9 +627,20 @@ namespace clothing_store.Migrations
                         .HasForeignKey("AccountId");
                 });
 
+            modelBuilder.Entity("clothing_store.Models.Basket", b =>
+                {
+                    b.HasOne("Account", "Account")
+                        .WithOne("Basket")
+                        .HasForeignKey("clothing_store.Models.Basket", "AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+                });
+
             modelBuilder.Entity("clothing_store.Models.BasketProduct", b =>
                 {
-                    b.HasOne("Basket", "Basket")
+                    b.HasOne("clothing_store.Models.Basket", "Basket")
                         .WithMany("BasketProducts")
                         .HasForeignKey("BasketId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -689,14 +705,14 @@ namespace clothing_store.Migrations
                     b.Navigation("Orders");
                 });
 
-            modelBuilder.Entity("Basket", b =>
-                {
-                    b.Navigation("BasketProducts");
-                });
-
             modelBuilder.Entity("Order", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("clothing_store.Models.Basket", b =>
+                {
+                    b.Navigation("BasketProducts");
                 });
 
             modelBuilder.Entity("clothing_store.Models.Product", b =>

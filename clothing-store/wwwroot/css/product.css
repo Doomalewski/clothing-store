@@ -107,3 +107,16 @@
     height: 25px;
     object-fit: contain; /* Prevent distortion */
 }
+.new-badge {
+    top: 10px;
+    right: 10px;
+    background-color: darkorange;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    z-index: 10;
+    text-transform: uppercase;
+}
+

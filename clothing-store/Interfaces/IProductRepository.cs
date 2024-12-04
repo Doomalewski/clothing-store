@@ -9,5 +9,7 @@ namespace clothing_store.Interfaces
         public Task<List<Product>> GetAllProductsAsync();
         public Task UpdateProductAsync(Product product);
         public Task DeleteProductAsync(Product product);
+        public Task<List<Product>> GetAllNewProductsAsync();
+        public Task<List<Product>> GetAllOldProductsAsync();
     }
 }

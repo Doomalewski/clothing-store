@@ -523,6 +523,9 @@ namespace clothing_store.Migrations
                     b.Property<int>("TaxId")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime>("TimePosted")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<int>("TimesBought")
                         .HasColumnType("integer");
 

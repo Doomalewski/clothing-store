@@ -23,6 +23,14 @@ namespace clothing_store.Services
         public async Task DeleteProductByIdAsync(int productId)
         {
             var productToDelete = await _productRepository.GetProductByIdAsync(productId);
+            if(productToDelete.New == true)
+            {
+                var oldProducts = await _productRepository.GetAllOldProductsAsync();
+                //Sorted from new to old
+                var productToSetNew = oldProducts.OrderByDescending(x => x.TimePosted).FirstOrDefault();
+                productToSetNew.New = true;
+                await _productRepository.UpdateProductAsync(productToSetNew);
+            }
             string productPhotoName = productToDelete.Name + "1.jpg";
             string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", $"{productPhotoName}");
 
@@ -32,6 +40,12 @@ namespace clothing_store.Services
                 File.Delete(imagePath);
             }
             await _productRepository.DeleteProductAsync(productToDelete);
+        }
+        public async Task<Product> GetOldestNewProductAsync()
+        {
+            var newProducts =  await _productRepository.GetAllNewProductsAsync();
+            //sorted from old to new
+            return newProducts.OrderBy(p => p.TimePosted).FirstOrDefault();
         }
     }
 }
