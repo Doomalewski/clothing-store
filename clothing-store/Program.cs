@@ -17,6 +17,7 @@ QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IAccountService, AccountService>();
 builder.Services.AddTransient<IBasketService, BasketService>();
+builder.Services.AddTransient<IDiscountService, DiscountService>();
 builder.Services.AddScoped<ICurrencyService, CurrencyService>();
 builder.Services.AddTransient<ITaxService, TaxService>();
 builder.Services.AddTransient<IProductService, ProductService>();
@@ -29,6 +30,7 @@ builder.Services.AddHttpContextAccessor();
 
 // Adding repositories as Transient
 builder.Services.AddTransient<ITaxRepository, TaxRepository>();
+builder.Services.AddTransient<IDiscountRepository, DiscountRepository>();
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 builder.Services.AddTransient<ICurrencyRepository, CurrencyRepository>();
 builder.Services.AddTransient<IBasketRepository,BasketRepository>();

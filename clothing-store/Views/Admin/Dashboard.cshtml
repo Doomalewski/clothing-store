@@ -63,5 +63,21 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0" style="background-color: #000; color: #fff;">
+                <div class="card-header text-center" style="background-color: #000; border-bottom: 1px solid #444;">
+                    <h5 class="mb-0">Stwórz rabat</h5>
+                </div>
+                <div class="card-body text-center">
+                    <p>Wprowadź ID użytkownika, aby stworzyć rabat.</p>
+                    <form asp-controller="SpecialDiscount" asp-action="CreateSpecialDiscount" method="get">
+                        <div class="form-group">
+                            <input type="number" name="accountId" placeholder="ID użytkownika" class="form-control mb-3" required />
+                        </div>
+                        <button type="submit" class="btn btn-light w-100">Stwórz rabat</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
