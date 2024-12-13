@@ -29,8 +29,15 @@
                         <img src="~/Images/shopping-cart-icon.jpg" alt="Add to Cart" class="cart-icon">
                     </button>
                 </form>
+
+                <!-- Conditional Button (Visible only for Admin) -->
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Product" asp-action="EditDiscount" asp-route-id="@product.ProductId" class="btn btn-primary mt-2">
+                        Edytuj rabat
+                    </a>
+                }
             </div>
         </div>
     }
 </div>
-

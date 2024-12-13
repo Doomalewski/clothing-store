@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using clothing_store.Interfaces;
 using clothing_store.Models;
+using clothing_store.ViewModels;
 
 
 namespace clothing_store.Controllers
@@ -150,5 +151,48 @@ namespace clothing_store.Controllers
             await _productService.DeleteProductByIdAsync(id);
             return RedirectToAction(nameof(Index));
         }
+        [HttpGet]
+        public async Task<IActionResult> EditDiscount(int id)
+        {
+            var product = await _productService.GetProductByIdAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new EditDiscountViewModel
+            {
+                ProductId = product.ProductId,
+                Name = product.Name,
+                CurrentPrice = product.Price,
+                DiscountPrice = product.DiscountPrice
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditDiscount(EditDiscountViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var product = await _productService.GetProductByIdAsync(model.ProductId);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            product.DiscountPrice = model.DiscountPrice;
+
+            await _productService.UpdateProductAsync(product);
+
+            TempData["Message"] = "Discount updated successfully!";
+            return RedirectToAction("Index"); // Adjust the redirect as needed
+        }
+
     }
 }
