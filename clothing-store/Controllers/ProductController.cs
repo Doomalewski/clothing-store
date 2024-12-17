@@ -142,6 +142,12 @@ namespace clothing_store.Controllers
             var productToDelete = await _productService.GetProductByIdAsync(id);
             return View(productToDelete);
         }
+        
+        public async Task<ActionResult> Edit(int id)
+        {
+            var productToEdit = await _productService.GetProductByIdAsync(id);
+            return View(productToEdit);
+        }
 
         // POST: ProductController/Delete/5
         [HttpPost]

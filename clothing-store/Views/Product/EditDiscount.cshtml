@@ -1,27 +1,36 @@
 ﻿@model clothing_store.ViewModels.EditDiscountViewModel
 
 <div class="container mt-5">
-    <h2 class="text-center">Edit Discount for @Model.Name</h2>
-    <form asp-action="EditDiscount" method="post">
-        <!-- Hidden field for Name -->
-        <input type="hidden" id="Name" name="Name" value="@Model.Name" />
-
-        <div class="form-group">
-            <label for="ProductId">Product ID</label>
-            <input type="text" id="ProductId" name="ProductId" value="@Model.ProductId" class="form-control" readonly />
+    <div class="card">
+        <div class="card-header bg-dark text-white text-center">
+            <h3>Edit Discount</h3>
         </div>
+        <div class="card-body bg-black text-white">
+            <form asp-action="EditDiscount" method="post">
+                <!-- Hidden field for Name -->
+                <input type="hidden" id="Name" name="Name" value="@Model.Name" />
 
-        <div class="form-group">
-            <label for="CurrentPrice">Current Price</label>
-            <input type="text" id="CurrentPrice" name="CurrentPrice" value="@Model.CurrentPrice" class="form-control" readonly />
+                <div class="mb-3">
+                    <label for="ProductId" class="form-label">Product ID</label>
+                    <input type="text" id="ProductId" name="ProductId" value="@Model.ProductId" class="form-control" readonly />
+                </div>
+
+                <div class="mb-3">
+                    <label for="CurrentPrice" class="form-label">Current Price</label>
+                    <input type="text" id="CurrentPrice" name="CurrentPrice" value="@Model.CurrentPrice" class="form-control" readonly />
+                </div>
+
+                <div class="mb-3">
+                    <label for="DiscountPrice" class="form-label">Discount Price</label>
+                    <input type="number" id="DiscountPrice" name="DiscountPrice" value="@Model.DiscountPrice" class="form-control" step="0.01" placeholder="Enter discount price" />
+                </div>
+
+               
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a asp-action="Index" class="btn bg-white text-black">Cancel</a>
+                </div>
+            </form>
         </div>
-
-        <div class="form-group">
-            <label for="DiscountPrice">Discount Price</label>
-            <input type="number" id="DiscountPrice" name="DiscountPrice" value="@Model.DiscountPrice" class="form-control" step="0.01" />
-        </div>
-
-        <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
-        <a asp-action="Index" class="btn btn-secondary mt-3">Cancel</a>
-    </form>
+    </div>
 </div>

@@ -14,15 +14,14 @@
             <h2 class="text-white mb-4" style="font-weight: bold;">Panel Administratora</h2>
         </div>
 
-        <!-- Dodaj produkt -->
         <div class="col-md-4">
             <div class="card shadow-lg border-0" style="background-color: #000; color: #fff;">
                 <div class="card-header text-center" style="background-color: #000; border-bottom: 1px solid #444;">
-                    <h5 class="mb-0">Dodaj produkt</h5>
+                    <h5 class="mb-0">Zarządzaj Produktami</h5>
                 </div>
                 <div class="card-body text-center">
-                    <p>Dodaj nowy produkt do sklepu.</p>
-                    <a asp-controller="Product" asp-action="Create" class="btn btn-light w-100">Dodaj produkt</a>
+                    <p>Przeglądaj listę wszystkich produktów.</p>
+                    <a asp-controller="Product" asp-action="Index" class="btn btn-light w-100">Wyświetl</a>
                 </div>
             </div>
         </div>
@@ -76,6 +75,18 @@
                         </div>
                         <button type="submit" class="btn btn-light w-100">Stwórz rabat</button>
                     </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0" style="background-color: #000; color: #fff;">
+                <div class="card-header text-center" style="background-color: #000; border-bottom: 1px solid #444;">
+                    <h5 class="mb-0">Wyświetl Produkty</h5>
+                </div>
+                <div class="card-body text-center">
+                    <p>Przeglądaj listę wszystkich produktów.</p>
+                    <a asp-controller="Product" asp-action="Index" class="btn btn-light w-100">Wyświetl</a>
                 </div>
             </div>
         </div>

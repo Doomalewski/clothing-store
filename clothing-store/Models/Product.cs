@@ -64,5 +64,6 @@ namespace clothing_store.Models
         public List<BasketProduct> BasketProducts { get; set; } = new List<BasketProduct>();
         [Required]
         public DateTime TimePosted { get; set; }
+        
     }
 }
