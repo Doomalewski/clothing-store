@@ -14,10 +14,10 @@
         <nav class="navgrid">
             <a asp-controller="Home" asp-action="Index">Sklep</a>
             <a asp-controller="Home" asp-action="Products">All products</a>
-            <a href="#" id="currencyDropdown" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <a href="#" id="currencyDropdown" class="dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false">
                 PLN
             </a>
-            <ul class="dropdown-menu" aria-labelledby="currencyDropdown">
+            <ul class="dropdown-menu bg-black" aria-labelledby="currencyDropdown">
                 <li><a class="dropdown-item" href="#" data-currency="PLN">PLN</a></li>
                 <li><a class="dropdown-item" href="#" data-currency="USD">USD</a></li>
                 <li><a class="dropdown-item" href="#" data-currency="EUR">EUR</a></li>
@@ -25,7 +25,16 @@
 
             <a asp-controller="Admin" asp-action="Dashboard"> Dashboard</a>
             <a asp-controller="Basket" asp-action="Index">Koszyk</a>
-            <a asp-controller="Account" asp-action="Details">Konto</a>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <!-- Logged-in users go to Details -->
+                <a asp-controller="Account" asp-action="Details">Konto</a>
+            }
+            else
+            {
+                <!-- Not logged-in users go to Login -->
+                <a asp-controller="Account" asp-action="Login">Konto</a>
+            }
         </nav>
 
         
@@ -37,7 +46,7 @@
     </main>
 </div>
     <!-- Footer -->
-    <footer class="bg-black text-white py-4 mt-5">
+    <footer class="bg-black text-white py-4 mt-5 ">
         <div class="container">
             <div class="row">
                 <!-- About Section -->
@@ -74,8 +83,7 @@
         </div>
     </footer>
 
-    <footer class="border-top footer text-muted">
-    </footer>
+    
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

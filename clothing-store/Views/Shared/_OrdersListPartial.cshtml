@@ -2,7 +2,7 @@
 
 <table class="table">
     <thead>
-        <tr>
+        <tr class="text-white">
             <th>Id</th>
             <th>Data</th>
             <th>Status</th>
@@ -13,13 +13,13 @@
     <tbody>
         @foreach (var order in Model)
         {
-            <tr >
+            <tr class="text-white">
                 <td>@order.OrderId</td>
                 <td>@order.Date.ToString("yyyy-MM-dd")</td>
                 <td>@order.OrderStatus</td>
                 <td>@order.FullPrice.ToString("C")</td>
                 <td>
-                    <a asp-controller="Order" asp-action="Details" asp-route-id="@order.OrderId" class="btn btn-info btn-sm">Szczegóły</a>
+                    <a asp-controller="Order" asp-action="Details" asp-route-id="@order.OrderId" class="btn btn-info btn-sm">Details</a>
                 </td>
             </tr>
         }

@@ -480,6 +480,37 @@ public async Task<IActionResult> ToggleNewsletterSubscription()
             // 9. Przekierowanie do strony potwierdzenia zamówienia
             return RedirectToAction("OrderConfirmation", new { orderId = order.OrderId });
         }
+        
+        [HttpGet]
+        public async Task<IActionResult> OrderConfirmation(int orderId)
+        {
+            // Retrieve the order from the database using your OrderService
+            var order = await _orderService.GetOrderByIdAsync(orderId);
+            if (order == null)
+            {
+                return NotFound("Order not found.");
+            }
+
+            // Build a simple view model (or use the Order entity directly as the model)
+            var viewModel = new OrderConfirmationViewModel
+            {
+                OrderId = order.OrderId,
+                Date = order.Date,
+                Street = order.Street,
+                City = order.City,
+                State = order.State,
+                ZipCode = order.ZipCode,
+                Country = order.Country,
+                FullPrice = order.FullPrice,
+                ShippingMethodName = order.Shipping?.Name,
+                PaymentMethodName = order.Payment?.Name,
+                OrderStatus = order.OrderStatus.ToString(),
+                // Add more properties as needed
+            };
+
+            return View(viewModel); // Pass the view model to the OrderConfirmation.cshtml
+        }
+
         [HttpPost]
         public async Task<IActionResult> ForgotPassword(string email)
         {
