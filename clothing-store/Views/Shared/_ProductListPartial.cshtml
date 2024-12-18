@@ -1,7 +1,29 @@
 ﻿@model List<clothing_store.ViewModels.ProductViewModel>
 <head>
     <link rel="stylesheet" href="~/css/product.css" asp-append-version="true" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
+
+@{
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+}
+
+<div class="sorting-container">
+    <form method="get" asp-action="@currentAction" asp-controller="@currentController" class="sort-form">
+        <label for="sortOrder">Sortuj według:</label>
+        <select id="sortOrder" name="sortOrder" class="sort-dropdown" onchange="saveSortOrder(this.value)">
+            <option value="default" selected>Domyślnie</option>
+            <option value="priceAsc">Cena rosnąco</option>
+            <option value="priceDesc">Cena malejąco</option>
+            <option value="nameAsc">Nazwa A-Z</option>
+            <option value="nameDesc">Nazwa Z-A</option>
+            <option value="timesBoughtDesc">Najczęściej kupowane</option>
+        </select>
+    </form>
+</div>
+
+
 <div class="product-container">
     @foreach (var product in Model)
     {
@@ -41,3 +63,16 @@
         </div>
     }
 </div>
+<script>
+    // Zapisuje wybraną wartość sortowania w ciasteczku
+    function saveSortOrder(sortOrder) {
+        document.cookie = `SortOrder=${sortOrder}; path=/; max-age=86400`; // 86400 sekund = 1 dzień
+        document.querySelector('.sort-form').submit(); // Przesyła formularz
+    }
+
+    // Ustawia wybraną wartość sortowania na podstawie ciasteczka
+    const sortOrder = document.cookie.split('; ').find(row => row.startsWith('SortOrder='))?.split('=')[1];
+    if (sortOrder) {
+        document.getElementById('sortOrder').value = sortOrder;
+    }
+</script>

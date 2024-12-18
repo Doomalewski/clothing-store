@@ -14,11 +14,13 @@ namespace clothing_store.Controllers
         private readonly IProductService _productService;
         private readonly ITaxService _taxService;
         private readonly IBrandService _brandService;
-        public ProductController(IProductService productService,ITaxService taxService, IBrandService brandService)
+        private readonly ICurrencyService _currencyService;
+        public ProductController(IProductService productService,ITaxService taxService, IBrandService brandService, ICurrencyService currencyService )
         {
             _productService = productService;
             _taxService = taxService;
             _brandService = brandService;
+            _currencyService = currencyService;
         }
         // GET: ProductController
         public async Task<ActionResult> Index()
@@ -199,6 +201,8 @@ namespace clothing_store.Controllers
             TempData["Message"] = "Discount updated successfully!";
             return RedirectToAction("Index"); // Adjust the redirect as needed
         }
+
+
 
     }
 }
