@@ -6,7 +6,28 @@
     <div class="baner">
         <img src="~/Images/edzio.jpg" alt="Zdjęcie banera">
         <h1>PROMOCJE</h1>
+    @{
+        var successMessage = TempData["SuccessMessage"] as string;
+    }
+
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        <div id="notification" class="toast-notification">
+            @successMessage
+        </div>
+    }
+
     </div>
 <div id="product-section">
     @await Html.PartialAsync("_ProductListPartial", Model)
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const notification = document.getElementById("notification");
+        if (notification) {
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+    });
+</script>

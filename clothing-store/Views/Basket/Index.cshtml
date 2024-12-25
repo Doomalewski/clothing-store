@@ -3,7 +3,12 @@
 @{
     ViewData["Title"] = "Your Shopping Cart";
 }
-
+@if (TempData["StockAlert"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["StockAlert"]
+    </div>
+}
 <div class="container mt-5">
     <div class="row">
         <!-- Continue Shopping Link -->

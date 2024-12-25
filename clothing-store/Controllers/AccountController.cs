@@ -261,7 +261,6 @@ namespace clothing_store.Controllers
             return View(viewModel);
         }
         [HttpGet]
-        [HttpGet]
         public async Task<IActionResult> Orders()
         {
             var account = await _accountService.GetAccountFromHttpAsync();
@@ -285,60 +284,65 @@ namespace clothing_store.Controllers
             return View(viewModel);
         }
         [HttpGet]
-public async Task<IActionResult> Newsletter()
-{
-    var account = await _accountService.GetAccountFromHttpAsync();
-    if (account == null)
-    {
-        return NotFound();
-    }
+        public async Task<IActionResult> Newsletter()
+        {
+            var account = await _accountService.GetAccountFromHttpAsync();
+            if (account == null)
+            {
+                return NotFound();
+            }
 
-    var viewModel = new AccountDetailsViewModel
-    {
-        Account = account
-    };
+            var viewModel = new AccountDetailsViewModel
+            {
+                Account = account
+            };
 
-    return View(viewModel);
-}
+            return View(viewModel);
+        }
 
 
-[HttpPost]
-public async Task<IActionResult> ToggleNewsletterSubscription()
-{
-    var account = await _accountService.GetAccountFromHttpAsync();
-    if (account == null)
-    {
-        return NotFound();
-    }
+        [HttpPost]
+        public async Task<IActionResult> ToggleNewsletterSubscription()
+        {
+            var account = await _accountService.GetAccountFromHttpAsync();
+            if (account == null)
+            {
+                return NotFound();
+            }
 
-    account.Newsletter = !account.Newsletter;
-    //await _accountService.UpdateAccountAsync(account);
+            account.Newsletter = !account.Newsletter;
+            //await _accountService.UpdateAccountAsync(account);
 
-    return RedirectToAction("Newsletter");
-}
+            return RedirectToAction("Newsletter");
+        }
 
         [HttpPost]
         public async Task<IActionResult> AddProductToCart(int id)
         {
-            // Pobierz produkt po ID
             var productToAdd = await _productService.GetProductByIdAsync(id);
             if (productToAdd == null)
             {
-                return NotFound(); // Produkt nie istnieje
+                return NotFound();
             }
+            var loggedAccount = await _accountService.GetAccountFromHttpAsync();
+            var basket = await _basketService.GetBasketByAccountIdAsync(loggedAccount.AccountId);
+            var basketProduct = basket.BasketProducts.FirstOrDefault(bp => bp.ProductId == id);
 
-            // Pobierz ID zalogowanego użytkownika
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-            if (userIdClaim == null)
+            if (productToAdd.Quantity <= 0)
             {
-                return Unauthorized(); // Brak zalogowanego użytkownika
+                TempData["StockAlert"] = "Product is sold out";
+                return RedirectToAction("Details", "Product", new { id = id }); // Przekierowanie na szczegóły produktu
             }
 
-            int userId = int.Parse(userIdClaim.Value);
+            if (basketProduct != null && basketProduct.Quantity >= productToAdd.Quantity)
+            {
+                TempData["StockAlert"] = $"You cannot add more than {productToAdd.Quantity} units of this product.";
+                return RedirectToAction("Details", "Product", new { id = id });
+            }
 
             // Dodaj produkt do koszyka użytkownika
-            await _basketService.AddProductToCartAsync(userId, productToAdd);
-
+            await _basketService.AddProductToCartAsync(loggedAccount.AccountId, productToAdd);
+            TempData["SuccessMessage"] = "Product added succefully";
             return RedirectToAction("Index","Home"); // Możesz zwrócić inną odpowiedź, np. Redirect
         }
         public IActionResult ForgotPassword()

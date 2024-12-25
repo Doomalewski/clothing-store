@@ -1,4 +1,6 @@
-﻿using clothing_store.Interfaces.clothing_store.Interfaces;
+﻿using clothing_store.Interfaces;
+using clothing_store.Interfaces.clothing_store.Interfaces;
+using clothing_store.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -7,9 +9,13 @@ namespace clothing_store.Controllers
     public class BasketController : Controller
     {
         private readonly IBasketService _basketService;
-        public BasketController(IBasketService basketService)
+        private readonly IAccountService _accountService;
+        private readonly IProductService _productService;
+        public BasketController(IBasketService basketService,IAccountService accountService,IProductService productService )
         {
             _basketService = basketService;
+            _accountService = accountService;
+            _productService = productService;
         }
         
         public IActionResult Checkout()
@@ -49,28 +55,37 @@ namespace clothing_store.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateCart(int productId, string action)
         {
-            var accountIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
-
-            if (accountIdClaim == null)
+            var account = await _accountService.GetAccountFromHttpAsync();
+            if (account == null)
             {
                 return RedirectToAction("Login", "Account");
             }
-
-            int accountId = int.Parse(accountIdClaim.Value);
-
-            var item = await _basketService.GetBasketProductByIdAsync(accountId, productId);
-
-            if (item != null)
+            var basketProduct = await _basketService.GetBasketProductByIdAsync(account.AccountId, productId);
+            if(action == "increment")
+            {
+                var productToUpdate = await _productService.GetProductByIdAsync(productId);
+                if (basketProduct != null && basketProduct.Quantity >= productToUpdate.Quantity)
+                {
+                    TempData["StockAlert"] = $"You cannot add more than {productToUpdate.Quantity} units of this product.";
+                    return RedirectToAction("Index", "Basket");
+                }
+            }
+            if (basketProduct.Quantity <= 0)
+            {
+                TempData["StockAlert"] = "Product is sold out";
+                return RedirectToAction("Details", "Product", new { id = basketProduct.ProductId }); // Przekierowanie na szczegóły produktu
+            }
+            if (basketProduct != null)
             {
                 switch (action)
                 {
                     case "increment":
-                        await _basketService.UpdateProductQuantityAsync(accountId, productId, item.Quantity + 1); // Inkrementacja ilości
+                        await _basketService.UpdateProductQuantityAsync(account.AccountId, productId, basketProduct.Quantity + 1); // Inkrementacja ilości
                         break;
                     case "decrement":
-                        if (item.Quantity > 1) // Sprawdź, czy ilość nie spadnie poniżej 1
+                        if (basketProduct.Quantity > 1) // Sprawdź, czy ilość nie spadnie poniżej 1
                         {
-                            await _basketService.UpdateProductQuantityAsync(accountId, productId, item.Quantity - 1); // Dekrementacja ilości
+                            await _basketService.UpdateProductQuantityAsync(account.AccountId, productId, basketProduct.Quantity - 1); // Dekrementacja ilości
                         }
                         break;
                 }
