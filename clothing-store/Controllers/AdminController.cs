@@ -1,5 +1,6 @@
 ﻿using clothing_store.Interfaces;
 using clothing_store.Services;
+using clothing_store.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,19 +14,33 @@ namespace clothing_store.Controllers
         private readonly IProductService _productService;
         private readonly IPDFService _pdfService;
         private readonly INotificationService _notificationService;
-        public AdminController(IAccountService accountService, ICurrencyService currencyService, IProductService productService, IPDFService pdfService,INotificationService notificationService)
+        private readonly IUserEventService _userEventService;
+        public AdminController(IAccountService accountService, ICurrencyService currencyService, IProductService productService, IPDFService pdfService,INotificationService notificationService, IUserEventService userEventService)
         {
             _accountService = accountService;
             _currencyService = currencyService;
             _productService = productService;
             _pdfService = pdfService;
             _notificationService = notificationService;
+            _userEventService = userEventService;
         }
+        public async Task<IActionResult> Statistics()
+        {
+            var totalVisits = await _userEventService.GetTotalVisitsAsync();
+            var todayVisits = await _userEventService.GetDailyVisitsAsync(DateTime.UtcNow);
 
+            var model = new StatisticsViewModel
+            {
+                TotalVisits = totalVisits,
+                TodayVisits = todayVisits
+            };
+
+            return View(model);
+        }
         public async Task<IActionResult> DashboardAsync()
         {
-            var unreadNotificationsCount = await _notificationService.GetUnreadNotificationsAsync();
-            ViewBag.UnreadNotificationsCount = unreadNotificationsCount.Count;
+            var unreadNotifications = await _notificationService.GetUnreadNotificationsAsync();
+            ViewBag.UnreadNotifications = unreadNotifications.Count == 0 ? false : true;
             return View();
         }
 

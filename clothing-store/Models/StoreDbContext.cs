@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore;
 
 
 
@@ -13,6 +14,7 @@ namespace clothing_store.Models
         public virtual DbSet<Address> Addresses { get; set; }
         public virtual DbSet<Basket> Baskets { get; set; }
         public virtual DbSet<Notification> Notifications { get; set; }
+        public virtual DbSet<UserEvent> UserEvents { get; set; }
 
         // OrderRelated
         public virtual DbSet<Card> Cards { get; set; }

@@ -16,6 +16,8 @@ QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IAccountService, AccountService>();
+builder.Services.AddScoped<IUserEventService, UserEventService>();
+
 builder.Services.AddTransient<IBasketService, BasketService>();
 builder.Services.AddTransient<IDiscountService, DiscountService>();
 builder.Services.AddScoped<ICurrencyService, CurrencyService>();
@@ -30,6 +32,7 @@ builder.Services.AddTransient<INotificationService, NotificationService>();
 builder.Services.AddHttpContextAccessor();
 
 // Adding repositories as Transient
+builder.Services.AddTransient<IUserEventRepository, UserEventRepository>();
 builder.Services.AddTransient<INotificationRepository, NotificationRepository>();
 builder.Services.AddTransient<ITaxRepository, TaxRepository>();
 builder.Services.AddTransient<IDiscountRepository, DiscountRepository>();
@@ -88,7 +91,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseMiddleware<VisitLoggingMiddleware>();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
