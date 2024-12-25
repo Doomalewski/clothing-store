@@ -10,6 +10,7 @@ using System.Security.Claims;
 using clothing_store.ViewModels;
 using clothing_store.Repositories;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using clothing_store.Services;
 
 namespace clothing_store.Controllers
 {
@@ -21,7 +22,8 @@ namespace clothing_store.Controllers
         private readonly IProductService _productService;
         private readonly IEmailService _emailService;
         private readonly IOrderService _orderService;
-        public AccountController(IAccountService accountService,ICurrencyService currencyService,IBasketService basketService,IProductService productService, IEmailService emailService,IOrderService orderService)
+        private readonly INotificationService _notificationService;
+        public AccountController(IAccountService accountService,ICurrencyService currencyService,IBasketService basketService,IProductService productService, IEmailService emailService,IOrderService orderService,INotificationService notificationService)
         {
             _accountService = accountService;
             _currencyService = currencyService;
@@ -29,6 +31,7 @@ namespace clothing_store.Controllers
             _productService = productService;
             _emailService = emailService;
             _orderService = orderService;
+            _notificationService = notificationService;
         }
         // GET: AccountController
         public ActionResult Index()
@@ -462,6 +465,16 @@ namespace clothing_store.Controllers
             {
                 var productToUpdate = await _productService.GetProductByIdAsync(item.ProductId);
                 productToUpdate.Quantity -= item.Quantity;
+                if(productToUpdate.Quantity == 0)
+                {
+                    productToUpdate.InStock = false;
+
+                    string message = $"Produkt wyprzedany: {productToUpdate.Name} " +
+                                     $"(ID: {productToUpdate.ProductId})" +
+                                     $"Cena: {productToUpdate.Price:C}).";
+                    await _notificationService.CreateNotificationAsync(message);
+                }
+
                 await _productService.UpdateProductAsync(productToUpdate);
             }
 

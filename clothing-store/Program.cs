@@ -25,10 +25,12 @@ builder.Services.AddTransient<IBrandService, BrandService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
 builder.Services.AddTransient<IPDFService, PDFService>();
+builder.Services.AddTransient<INotificationService, NotificationService>();
 
 builder.Services.AddHttpContextAccessor();
 
 // Adding repositories as Transient
+builder.Services.AddTransient<INotificationRepository, NotificationRepository>();
 builder.Services.AddTransient<ITaxRepository, TaxRepository>();
 builder.Services.AddTransient<IDiscountRepository, DiscountRepository>();
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();

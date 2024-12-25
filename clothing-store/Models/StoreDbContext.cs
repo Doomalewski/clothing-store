@@ -12,6 +12,7 @@ namespace clothing_store.Models
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<Address> Addresses { get; set; }
         public virtual DbSet<Basket> Baskets { get; set; }
+        public virtual DbSet<Notification> Notifications { get; set; }
 
         // OrderRelated
         public virtual DbSet<Card> Cards { get; set; }

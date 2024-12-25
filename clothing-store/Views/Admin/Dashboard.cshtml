@@ -78,17 +78,25 @@
                 </div>
             </div>
         </div>
-
+        @if (ViewBag.UnreadNotificationsCount > 0)
+        {
+            <div class="alert alert-warning text-center">
+                Masz <strong>@ViewBag.UnreadNotificationsCount</strong> nieprzeczytane powiadomienia!
+                <a href="@Url.Action("Index", "Notification")" class="alert-link">Zobacz</a>
+            </div>
+        }
         <div class="col-md-4">
             <div class="card shadow-lg border-0" style="background-color: #000; color: #fff;">
                 <div class="card-header text-center" style="background-color: #000; border-bottom: 1px solid #444;">
-                    <h5 class="mb-0">Wyświetl Produkty</h5>
+                    <h5 class="mb-0">Powiadomienia</h5>
                 </div>
                 <div class="card-body text-center">
-                    <p>Przeglądaj listę wszystkich produktów.</p>
-                    <a asp-controller="Product" asp-action="Index" class="btn btn-light w-100">Wyświetl</a>
+                    <p>Sprawdź listę powiadomień.</p>
+                    <a asp-controller="Notification" asp-action="Index" class="btn btn-light w-100">Sprawdź powiadomienia</a>
                 </div>
             </div>
         </div>
+
+
     </div>
 </div>

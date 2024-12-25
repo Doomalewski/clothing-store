@@ -1,0 +1,47 @@
+﻿@model List<clothing_store.Models.Notification>
+
+@{
+    ViewData["Title"] = "Powiadomienia";
+    <div class="container mt-5">
+        <h2 class="text-center text-white mb-4" style="font-weight: bold;">Powiadomienia</h2>
+
+        @if (Model.Count == 0)
+        {
+            <p class="text-center text-light">Brak nowych powiadomień.</p>
+        }
+        else
+        {
+            <table class="table table-dark table-striped">
+                <thead>
+                    <tr>
+                        <th>Treść</th>
+                        <th>Data</th>
+                        <th>Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var notification in Model)
+                    {
+                        <tr style="color: @(notification.IsRead ? "gray" : "white");">
+                            <td>@notification.Message</td>
+                            <td>@notification.CreatedAt.ToString("g")</td>
+                            <td>
+                                @if (!notification.IsRead)
+                                {
+                                    <form asp-action="MarkAsRead" method="post">
+                                        <input type="hidden" name="id" value="@notification.Id" />
+                                        <button type="submit" class="btn btn-light btn-sm">Oznacz jako przeczytane</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Przeczytane</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+    }

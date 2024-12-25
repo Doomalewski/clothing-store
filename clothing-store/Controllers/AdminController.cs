@@ -12,16 +12,20 @@ namespace clothing_store.Controllers
         private readonly ICurrencyService _currencyService; // Dodajemy ICurrencyService
         private readonly IProductService _productService;
         private readonly IPDFService _pdfService;
-        public AdminController(IAccountService accountService, ICurrencyService currencyService, IProductService productService, IPDFService pdfService)
+        private readonly INotificationService _notificationService;
+        public AdminController(IAccountService accountService, ICurrencyService currencyService, IProductService productService, IPDFService pdfService,INotificationService notificationService)
         {
             _accountService = accountService;
             _currencyService = currencyService;
             _productService = productService;
             _pdfService = pdfService;
+            _notificationService = notificationService;
         }
 
-        public IActionResult Dashboard()
+        public async Task<IActionResult> DashboardAsync()
         {
+            var unreadNotificationsCount = await _notificationService.GetUnreadNotificationsAsync();
+            ViewBag.UnreadNotificationsCount = unreadNotificationsCount.Count;
             return View();
         }
 
@@ -82,7 +86,7 @@ namespace clothing_store.Controllers
         {
             await _currencyService.UpdateCurrencyRatesAsync();
             TempData["Message"] = "Kursy walut zostały zaktualizowane."; // Komunikat o sukcesie
-            return RedirectToAction(nameof(Dashboard)); // Powrót na dashboard
+            return RedirectToAction(nameof(DashboardAsync)); // Powrót na dashboard
         }
         [HttpGet]
         public async Task<IActionResult> DownloadPriceList()
