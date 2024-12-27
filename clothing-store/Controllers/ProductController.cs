@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using clothing_store.Interfaces;
 using clothing_store.Models;
 using clothing_store.ViewModels;
+using NuGet.Versioning;
 
 
 namespace clothing_store.Controllers
@@ -42,27 +43,29 @@ namespace clothing_store.Controllers
         }
 
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-
         public async Task<IActionResult> Create(ProductCreateDto dto)
         {
             if (!ModelState.IsValid)
             {
                 return View(dto);
             }
+
             var uploadedFileNames = new List<string>();
 
             // Sprawdzanie czy są załączone zdjęcia
             if (dto.Photos != null && dto.Photos.Count > 0)
             {
-                foreach (var photo in dto.Photos)
+                // Obsługa do maksymalnie 5 zdjęć
+                int maxPhotos = Math.Min(dto.Photos.Count, 5);
+                for (int i = 0; i < maxPhotos; i++)
                 {
+                    var photo = dto.Photos[i];
                     if (photo.Length > 0)
                     {
                         // Generowanie nowej nazwy pliku na podstawie nazwy produktu
-                        var newFileName = $"{dto.Name}{uploadedFileNames.Count + 1}{".jpg"}";
+                        var newFileName = $"{dto.Name}{i + 1}.jpg";
 
                         // Ścieżka do zapisu pliku
                         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", newFileName);
@@ -78,12 +81,13 @@ namespace clothing_store.Controllers
                     }
                 }
             }
+
             var tax = await _taxService.GetTaxByIdAsync(dto.TaxId);
             var brand = await _brandService.GetBrandByIdAsync(dto.BrandId);
 
             if (brand == null || tax == null)
             {
-                ModelState.AddModelError("", "Wybrany Brand lub Vat nie istnieje.");
+                ModelState.AddModelError("", "Wybrany Brand lub VAT nie istnieje.");
                 return View(dto);
             }
 
@@ -106,6 +110,7 @@ namespace clothing_store.Controllers
                 InStock = true,
                 Opinions = new List<Opinion>()
             };
+
             var productToRemoveFromNew = await _productService.GetOldestNewProductAsync();
             productToRemoveFromNew.New = false;
             await _productService.UpdateProductAsync(productToRemoveFromNew);
@@ -115,6 +120,7 @@ namespace clothing_store.Controllers
         }
 
 
+
         // GET: ProductController/Edit/5
         public async Task<ActionResult> Details(int id)
         {
@@ -122,19 +128,40 @@ namespace clothing_store.Controllers
             return View(product);
         }
 
-        // POST: ProductController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(ProductEditViewModel model)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                // Repopulate dropdown data if validation fails
+                model.Brands = await _brandService.GetAllBrandsAsync();
+                model.Taxes = await _taxService.GetAllTaxesAsync();
+                return View(model);
             }
-            catch
+
+            var product = await _productService.GetProductByIdAsync(model.ProductId);
+            if (product == null)
             {
-                return View();
+                return NotFound();
             }
+
+            // Updating product properties
+            product.Name = model.Name;
+            product.BrandId = model.BrandId;
+            product.Description = model.Description;
+            product.Price = model.Price;
+            product.DiscountPrice = model.DiscountPrice;
+            product.TaxId = model.TaxId;
+            product.Quantity = model.Quantity;
+            product.Visible = model.Visible;
+            product.New = model.New;
+            product.InStock = model.InStock;
+
+            await _productService.UpdateProductAsync(product);
+
+            TempData["Message"] = "Product updated successfully!";
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: ProductController/Delete/5
@@ -144,12 +171,44 @@ namespace clothing_store.Controllers
             var productToDelete = await _productService.GetProductByIdAsync(id);
             return View(productToDelete);
         }
-        
-        public async Task<ActionResult> Edit(int id)
+
+        public async Task<IActionResult> Edit(int id)
         {
-            var productToEdit = await _productService.GetProductByIdAsync(id);
-            return View(productToEdit);
+            var product = await _productService.GetProductByIdAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            var taxes = await _taxService.GetAllTaxesAsync();
+
+            // Append % to the Value property
+            var taxOptions = taxes.Select(t => new
+            {
+                t.TaxId,
+                Value = $"{t.Value}%"
+            }).ToList();
+
+            var viewModel = new ProductEditViewModel
+            {
+                ProductId = product.ProductId,
+                Name = product.Name,
+                BrandId = product.BrandId,
+                Description = product.Description,
+                Price = product.Price,
+                DiscountPrice = product.DiscountPrice,
+                TaxId = product.TaxId,
+                Quantity = product.Quantity,
+                Visible = product.Visible,
+                New = product.New,
+                InStock = product.InStock,
+                Brands = await _brandService.GetAllBrandsAsync(),
+                Taxes = taxOptions
+            };
+
+            return View(viewModel);
         }
+
 
         // POST: ProductController/Delete/5
         [HttpPost]

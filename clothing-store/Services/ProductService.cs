@@ -23,24 +23,34 @@ namespace clothing_store.Services
         public async Task DeleteProductByIdAsync(int productId)
         {
             var productToDelete = await _productRepository.GetProductByIdAsync(productId);
-            if(productToDelete.New == true)
+
+            // Sprawdzenie i ustawienie nowego produktu jako "New" w razie potrzeby
+            if (productToDelete.New == true)
             {
                 var oldProducts = await _productRepository.GetAllOldProductsAsync();
-                //Sorted from new to old
+                // Posortowane od najnowszego do najstarszego
                 var productToSetNew = oldProducts.OrderByDescending(x => x.TimePosted).FirstOrDefault();
-                productToSetNew.New = true;
-                await _productRepository.UpdateProductAsync(productToSetNew);
+                if (productToSetNew != null)
+                {
+                    productToSetNew.New = true;
+                    await _productRepository.UpdateProductAsync(productToSetNew);
+                }
             }
-            string productPhotoName = productToDelete.Name + "1.jpg";
-            string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", $"{productPhotoName}");
 
-            // Sprawdzenie, czy plik istnieje, i jego usunięcie
-            if (File.Exists(imagePath))
+            // Usunięcie wszystkich zdjęć powiązanych z produktem
+            foreach (var photo in productToDelete.Photos)
             {
-                File.Delete(imagePath);
+                string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", photo);
+                if (File.Exists(imagePath))
+                {
+                    File.Delete(imagePath);
+                }
             }
+
+            // Usunięcie produktu z repozytorium
             await _productRepository.DeleteProductAsync(productToDelete);
         }
+
         public async Task<Product> GetOldestNewProductAsync()
         {
             var newProducts =  await _productRepository.GetAllNewProductsAsync();

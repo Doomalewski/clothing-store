@@ -1,114 +1,68 @@
-@model clothing_store.Models.Product
-
-@{
-    ViewData["Title"] = "Edit Product";
-}
+@model clothing_store.ViewModels.ProductEditViewModel
 
 <div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <!-- Card for Editing Product -->
-            <div class="card shadow-lg border-0" style="background-color: #000; color: #fff; padding-bottom: 20px;">
-                <div class="card-header text-center" style="background-color: #000; border-bottom: 1px solid #444;">
-                    <h2 class="mb-0">Edit Product</h2>
-                </div>
+    <h2>Edit Product</h2>
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="ProductId" />
 
-                <div class="card-body">
-                    <!-- Display validation errors (if any) -->
-                    <div class="text-danger">
-                        <span asp-validation-summary="All"></span>
-                    </div>
-
-                    <form asp-action="Edit" method="post">
-                        <!-- Hidden Primary Key -->
-                        <input type="hidden" asp-for="ProductId" />
-
-                        <!-- Name -->
-                        <div class="form-group">
-                            <label asp-for="Name"></label>
-                            <input asp-for="Name" class="form-control" />
-                            <span asp-validation-for="Name" class="text-danger"></span>
-                        </div>
-
-                        <!-- BrandId (ideally replaced by a dropdown of brands) -->
-                        <div class="form-group">
-                            <label asp-for="BrandId"></label>
-                            <input asp-for="BrandId" class="form-control" />
-                            <span asp-validation-for="BrandId" class="text-danger"></span>
-                        </div>
-
-                        <!-- Description -->
-                        <div class="form-group">
-                            <label asp-for="Description"></label>
-                            <textarea asp-for="Description" class="form-control"></textarea>
-                            <span asp-validation-for="Description" class="text-danger"></span>
-                        </div>
-
-                        <!-- Price -->
-                        <div class="form-group">
-                            <label asp-for="Price"></label>
-                            <input asp-for="Price" class="form-control" />
-                            <span asp-validation-for="Price" class="text-danger"></span>
-                        </div>
-
-                        <!-- DiscountPrice -->
-                        <div class="form-group">
-                            <label asp-for="DiscountPrice"></label>
-                            <input asp-for="DiscountPrice" class="form-control" />
-                            <span asp-validation-for="DiscountPrice" class="text-danger"></span>
-                        </div>
-
-                        <!-- TaxId (ideally replaced by a dropdown of taxes) -->
-                        <div class="form-group">
-                            <label asp-for="TaxId"></label>
-                            <input asp-for="TaxId" class="form-control" />
-                            <span asp-validation-for="TaxId" class="text-danger"></span>
-                        </div>
-
-                        <!-- Quantity -->
-                        <div class="form-group">
-                            <label asp-for="Quantity"></label>
-                            <input asp-for="Quantity" class="form-control" />
-                            <span asp-validation-for="Quantity" class="text-danger"></span>
-                        </div>
-
-                        <!-- Visible -->
-                        <div class="form-group">
-                            <div class="form-check">
-                                <input asp-for="Visible" class="form-check-input" />
-                                <label asp-for="Visible" class="form-check-label"></label>
-                            </div>
-                            <span asp-validation-for="Visible" class="text-danger"></span>
-                        </div>
-
-                        <!-- New -->
-                        <div class="form-group">
-                            <div class="form-check">
-                                <input asp-for="New" class="form-check-input" />
-                                <label asp-for="New" class="form-check-label"></label>
-                            </div>
-                            <span asp-validation-for="New" class="text-danger"></span>
-                        </div>
-
-                        <!-- InStock -->
-                        <div class="form-group">
-                            <div class="form-check">
-                                <input asp-for="InStock" class="form-check-input" />
-                                <label asp-for="InStock" class="form-check-label"></label>
-                            </div>
-                            <span asp-validation-for="InStock" class="text-danger"></span>
-                        </div>
-
-                       
-
-                        <!-- Save / Cancel Buttons -->
-                        <div class="mt-4">
-                            <button type="submit" class="btn btn-primary w-100 mb-2">Save</button>
-                            <a asp-action="Index" class="btn btn-secondary w-100">Cancel</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
+        <div class="form-group">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
         </div>
-    </div>
+
+        <div class="form-group">
+            <label asp-for="BrandId">Brand</label>
+            <select asp-for="BrandId" class="form-control" asp-items="@(new SelectList(Model.Brands, "BrandId", "Name"))"></select>
+            <span asp-validation-for="BrandId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Description"></label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Price"></label>
+            <input asp-for="Price" class="form-control" />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="DiscountPrice"></label>
+            <input asp-for="DiscountPrice" class="form-control" />
+            <span asp-validation-for="DiscountPrice" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="TaxId">Tax</label>
+            <select asp-for="TaxId" class="form-control" asp-items="@(new SelectList(Model.Taxes, "TaxId", "Value"))"></select>
+            <span asp-validation-for="TaxId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Quantity"></label>
+            <input asp-for="Quantity" class="form-control" />
+            <span asp-validation-for="Quantity" class="text-danger"></span>
+        </div>
+
+        <div class="form-check">
+            <input asp-for="Visible" class="form-check-input" />
+            <label asp-for="Visible" class="form-check-label"></label>
+        </div>
+
+        <div class="form-check">
+            <input asp-for="New" class="form-check-input" />
+            <label asp-for="New" class="form-check-label"></label>
+        </div>
+
+        <div class="form-check">
+            <input asp-for="InStock" class="form-check-input" />
+            <label asp-for="InStock" class="form-check-label"></label>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Save</button>
+        <a asp-action="Index" class="btn btn-secondary mt-3">Cancel</a>
+    </form>
 </div>
