@@ -24,18 +24,23 @@ namespace clothing_store.Controllers
         {
             // Jeœli sortOrder jest null, pobierz je z ciasteczka
 
-                var sortOrder = Request.Cookies["SortOrder"] ?? "default"; // Domyœlnie "default"
+            var sortOrder = Request.Cookies["SortOrder"] ?? "default"; // Domyœlnie "default"
 
 
-            var products = await _productService.GetAllProductsAsync();
+            List<Product> products;
+                           
             var currencies = await _currencyService.GetAllCurrenciesAsync();
 
             var preferredCurrencyCode = Request.Cookies["PreferredCurrency"] ?? "PLN";
             var preferredCurrency = currencies.FirstOrDefault(c => c.Code == preferredCurrencyCode) ?? currencies.FirstOrDefault(c => c.Code == "PLN");
 
             products = await GetSortedProductsAsync(sortOrder);
+            var topProducts = products
+                .OrderByDescending(p => p.TimesBought)
+                .Take(10)
+                .ToList();
             TempData["SortOrder"] = sortOrder;
-            var productViewModels = products.Select(product => new ProductViewModel
+            var productViewModels = topProducts.Select(product => new ProductViewModel
             {
                 ProductId = product.ProductId,
                 Name = product.Name,

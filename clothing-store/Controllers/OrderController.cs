@@ -42,5 +42,61 @@ namespace clothing_store.Controllers
 
             return View(orderDetailsDto);
         }
+        public async Task<IActionResult> Index()
+        {
+            // Pobierz wszystkie zamówienia
+            var orders = await _orderService.GetAllOrdersAsync();
+
+            // Mapowanie zamówień na DTO (jeśli chcesz używać DTO)
+            var orderListDto = orders.Select(order => new OrderListDto
+            {
+                OrderId = order.OrderId,
+                Date = order.Date,
+                OrderStatus = order.OrderStatus,
+                FullPrice = order.FullPrice,
+                ShippingMethod = order.Shipping.Name, // Assuming Shipping has a Name property
+                PaymentMethod = order.Payment.Name  // Assuming Payment is an Enum
+            }).ToList();
+
+            return View(orderListDto);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Manage(int id)
+        {
+            var order = await _orderService.GetOrderByIdAsync(id);
+
+            if (order == null)
+            {
+                return NotFound(); // Jeśli zamówienia nie znaleziono, zwróć 404
+            }
+
+            // Mapowanie zamówienia na DTO
+            var orderDto = new ManageOrderDto
+            {
+                OrderId = order.OrderId,
+                OrderStatus = order.OrderStatus
+            };
+
+            return View(orderDto); // Przekazanie danych do widoku `Manage`
+        }
+        [HttpPost]
+        public async Task<IActionResult> ChangeStatus(int id, StatusEnum orderStatus)
+        {
+            var order = await _orderService.GetOrderByIdAsync(id);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            // Zmiana statusu zamówienia
+            order.OrderStatus = orderStatus;
+            await _orderService.UpdateOrderAsync(order);
+
+            TempData["Message"] = "Status zamówienia został zmieniony.";
+            return RedirectToAction("Index");
+        }
+
     }
 }

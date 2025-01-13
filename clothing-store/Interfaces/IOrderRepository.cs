@@ -12,6 +12,8 @@ namespace clothing_store.Interfaces
         Task AddOrderProductAsync(OrderProduct orderProduct);
         Task<List<Order>> GetOrdersByAccountIdAsync(int accountId);
         Task<Order> GetOrderByIdAsync(int orderId);
+        Task UpdateOrderAsync(Order order);
+        Task<List<Order>> GetAllOrdersAsync();
 
     }
 }

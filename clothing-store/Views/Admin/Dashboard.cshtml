@@ -14,6 +14,7 @@
             <h2 class="text-white mb-4" style="font-weight: bold;">Panel Administratora</h2>
         </div>
 
+        <!-- Zarządzaj produktami -->
         <div class="col-md-4">
             <div class="card shadow-lg border-0" style="background-color: #000; color: #fff;">
                 <div class="card-header text-center" style="background-color: #000; border-bottom: 1px solid #444;">
@@ -51,17 +52,21 @@
                 </div>
             </div>
         </div>
+
+        <!-- Spis produktów -->
         <div class="col-md-4">
             <div class="card shadow-lg border-0" style="background-color: #000; color: #fff;">
                 <div class="card-header text-center" style="background-color: #000; border-bottom: 1px solid #444;">
                     <h5 class="mb-0">Spis produktów</h5>
                 </div>
                 <div class="card-body text-center">
-                    <p>Pobierz spis produtków (cena, ilosć, opis itd.) w PDF</p>
+                    <p>Pobierz spis produktów (cena, ilość, opis itd.) w PDF</p>
                     <a asp-controller="Admin" asp-action="DownloadPriceList" class="btn btn-light w-100">Pobierz</a>
                 </div>
             </div>
         </div>
+
+        <!-- Stwórz rabat -->
         <div class="col-md-4">
             <div class="card shadow-lg border-0" style="background-color: #000; color: #fff;">
                 <div class="card-header text-center" style="background-color: #000; border-bottom: 1px solid #444;">
@@ -78,6 +83,7 @@
                 </div>
             </div>
         </div>
+
         @if (ViewBag.UnreadNotifications)
         {
             <div class="alert alert-warning text-center">
@@ -85,6 +91,20 @@
                 <a href="@Url.Action("Index", "Notification")" class="alert-link">Zobacz</a>
             </div>
         }
+
+        <!-- Zarządzanie zamówieniami -->
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0" style="background-color: #000; color: #fff;">
+                <div class="card-header text-center" style="background-color: #000; border-bottom: 1px solid #444;">
+                    <h5 class="mb-0">Zarządzanie Zamówieniami</h5>
+                </div>
+                <div class="card-body text-center">
+                    <p>Przeglądaj, edytuj i zarządzaj zamówieniami.</p>
+                    <a asp-controller="Order" asp-action="Index" class="btn btn-light w-100">Zarządzaj zamówieniami</a>
+                </div>
+            </div>
+        </div>
+
         <div class="col-md-4">
             <div class="card shadow-lg border-0" style="background-color: #000; color: #fff;">
                 <div class="card-header text-center" style="background-color: #000; border-bottom: 1px solid #444;">
@@ -96,7 +116,5 @@
                 </div>
             </div>
         </div>
-
-
     </div>
 </div>

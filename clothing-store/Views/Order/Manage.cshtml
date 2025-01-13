@@ -1,0 +1,29 @@
+﻿@model ManageOrderDto
+
+@{
+    ViewData["Title"] = $"Zmień Status Zamówienia #{Model.OrderId}";
+}
+
+<h2 class="text-center">Zmień Status Zamówienia #@Model.OrderId</h2>
+
+<div class="container mt-5">
+    <div class="card shadow-lg border-0">
+        <div class="card-header text-center">
+            <h5 class="mb-0">Zmiana Statusu</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" asp-action="ChangeStatus" asp-route-id="@Model.OrderId">
+                <div class="form-group">
+                    <label for="orderStatus">Wybierz nowy status:</label>
+                    <select id="orderStatus" name="orderStatus" class="form-control">
+                        @foreach (var status in Enum.GetValues(typeof(StatusEnum)))
+                        {
+                            <option value="@status">@status</option>
+                        }
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3 w-100">Zmień Status</button>
+            </form>
+        </div>
+    </div>
+</div>

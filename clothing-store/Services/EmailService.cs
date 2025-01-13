@@ -56,7 +56,7 @@ namespace clothing_store.Services
             }).ToList();
 
             // Budowanie treści zamówionych produktów (w tym ceny jednostkowej i łącznej)
-            var fullinfo = string.Join("<br />", orderProducts.Select(op =>
+            var fullinfo = string.Join("\n", orderProducts.Select(op =>
                 $"{op.ProductName} x{op.Quantity} - {op.Price:C} each, Total: {op.TotalPrice:C}"
             ));
 

@@ -39,5 +39,7 @@ namespace clothing_store.Services
         {
             return await _orderRepository.GetOrderByIdAsync(orderId);
         }
+        public async Task UpdateOrderAsync(Order order) => await _orderRepository.UpdateOrderAsync(order);
+        public async Task<List<Order>> GetAllOrdersAsync() => await _orderRepository.GetAllOrdersAsync();
     }
 }

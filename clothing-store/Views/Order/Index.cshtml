@@ -1,0 +1,38 @@
+﻿@model List<OrderListDto>
+
+@{
+    ViewData["Title"] = "Lista zamówień";
+}
+
+<h2>Lista zamówień</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Data</th>
+            <th>Status</th>
+            <th>Pełna cena</th>
+            <th>Metoda wysyłki</th>
+            <th>Metoda płatności</th>
+            <th>Akcje</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.OrderId</td>
+                <td>@order.Date.ToString("dd/MM/yyyy")</td>
+                <td>@order.OrderStatus</td>
+                <td>@order.FullPrice.ToString("C")</td>
+                <td>@order.ShippingMethod</td>
+                <td>@order.PaymentMethod</td>
+                <td>
+                    <a href="@Url.Action("Details", "Order", new { id = order.OrderId })" class="btn btn-info">Szczegóły</a>
+                    <a href="@Url.Action("Manage", "Order", new { id = order.OrderId })" class="btn btn-warning">Zmień status</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
