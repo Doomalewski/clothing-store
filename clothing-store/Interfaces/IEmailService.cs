@@ -4,5 +4,7 @@
     {
         Task SendConfirmationEmail(string email);
         Task SendForgotPasswordEmail(string name, string url);
+        Task SendOrderConfirmationEmail(Order order);
+
     }
 }

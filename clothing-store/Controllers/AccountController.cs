@@ -458,9 +458,20 @@ namespace clothing_store.Controllers
                 Payment = paymentMethod, // Zakładając, że PaymentMethod to pole w modelu PlaceOrderViewModel
                 Date = DateTime.UtcNow // Ustawienie daty zamówienia
             };
+            foreach (var item in basket.BasketProducts)
+            {
+                var orderProduct = new OrderProduct
+                {
+                    OrderId = order.OrderId,  // Powiązanie z zamówieniem
+                    ProductId = item.ProductId,
+                    Quantity = item.Quantity
+                };
 
+                order.Products.Add(orderProduct); // Dodanie do listy produktów w zamówieniu
+            }
             // 6. Zapisanie zamówienia w bazie danych
             await _orderService.AddOrderAsync(order);
+            await _emailService.SendOrderConfirmationEmail(order);
             foreach (var item in basket.BasketProducts)
             {
                 var productToUpdate = await _productService.GetProductByIdAsync(item.ProductId);
