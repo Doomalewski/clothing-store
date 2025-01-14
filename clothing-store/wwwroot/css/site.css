@@ -307,6 +307,28 @@ footer {
     max-width: 80%;
     word-wrap: break-word;
 }
+.search-form {
+    display: flex;
+    justify-content: center; /* Centruje formularz */
+    margin: 20px auto; /* Odstęp od góry i dołu */
+    max-width: 400px; /* Maksymalna szerokość formularza */
+}
+
+.search-input {
+    width: 200px; /* Szerokość pola wyszukiwania */
+    border-radius: 20px; /* Zaokrąglone rogi */
+    padding: 10px; /* Wewnętrzny odstęp */
+    font-size: 14px; /* Wielkość tekstu */
+}
+
+.search-btn {
+    border-radius: 20px; /* Zaokrąglone rogi przycisku */
+    padding: 0 15px; /* Wewnętrzny odstęp poziomy */
+    font-size: 14px; /* Wielkość tekstu */
+    margin-left: 5px; /* Odstęp między polem a przyciskiem */
+    background-color:darkorange;
+    border-color:darkorange !important;
+}
 
 @keyframes fadeOut {
     0% {

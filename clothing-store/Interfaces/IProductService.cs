@@ -11,6 +11,9 @@ namespace clothing_store.Interfaces
         public Task DeleteProductByIdAsync(int productId);
         public Task<Product> GetOldestNewProductAsync();
         public Task<ProductDetailsDto> GetProductDetailsDtoAsync(int id, string preferredCurrencyCode);
+        public Task<List<Product>> GetPaginatedProductsAsync(int pageNumber, int pageSize);
+        public Task<int> GetTotalProductCountAsync();
+
 
     }
 }

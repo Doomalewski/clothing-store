@@ -84,6 +84,23 @@ namespace clothing_store.Services
                 Photos = product.Photos
             };
         }
+        public async Task<List<Product>> GetPaginatedProductsAsync(int pageNumber, int pageSize)
+        {
+            var products = await _productRepository.GetAllProductsAsync();
+
+            var paginatedProducts = products
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)                    
+                .ToList();
+
+            return paginatedProducts;
+        }
+        public async Task<int> GetTotalProductCountAsync()
+        {
+            var products = await _productRepository.GetAllProductsAsync();
+            return products.Count();
+        }
+
 
     }
 }

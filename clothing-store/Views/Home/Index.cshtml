@@ -18,9 +18,13 @@
     }
 
     </div>
-        <div class="baner">
-            <h1 style="">BESTSELLERS</h1>
+    <form method="get" asp-controller="Home" asp-action="Index" class="search-form">
+        <div class="input-group">
+            <input type="text" name="searchQuery" class="form-control search-input" placeholder="Search for products..." value="@ViewData["SearchQuery"]" />
+            <button class="btn btn-dark search-btn" type="submit">Search</button>
         </div>
+    </form>
+
 <div id="product-section">
     @await Html.PartialAsync("_ProductListPartial", Model)
 </div>

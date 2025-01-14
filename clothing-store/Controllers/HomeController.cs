@@ -20,26 +20,34 @@ namespace clothing_store.Controllers
             _currencyService = currencyService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? searchQuery)
         {
             // Jeœli sortOrder jest null, pobierz je z ciasteczka
-
             var sortOrder = Request.Cookies["SortOrder"] ?? "default"; // Domyœlnie "default"
 
-
-            List<Product> products;
-                           
             var currencies = await _currencyService.GetAllCurrenciesAsync();
-
             var preferredCurrencyCode = Request.Cookies["PreferredCurrency"] ?? "PLN";
-            var preferredCurrency = currencies.FirstOrDefault(c => c.Code == preferredCurrencyCode) ?? currencies.FirstOrDefault(c => c.Code == "PLN");
+            var preferredCurrency = currencies.FirstOrDefault(c => c.Code == preferredCurrencyCode)
+                                     ?? currencies.FirstOrDefault(c => c.Code == "PLN");
+            var productstoSort = await _productService.GetAllProductsAsync();
+            var products = GetSortedProductsAsync(sortOrder, productstoSort);
 
-            products = await GetSortedProductsAsync(sortOrder);
+            // Filtracja na podstawie wyszukiwanego zapytania
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                products = products.Where(p => p.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)
+                                             || (p.Description?.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ?? false))
+                                   .ToList();
+            }
+
             var topProducts = products
                 .OrderByDescending(p => p.TimesBought)
                 .Take(10)
                 .ToList();
+
             TempData["SortOrder"] = sortOrder;
+            ViewData["SearchQuery"] = searchQuery;
+
             var productViewModels = topProducts.Select(product => new ProductViewModel
             {
                 ProductId = product.ProductId,
@@ -53,37 +61,33 @@ namespace clothing_store.Controllers
 
             return View(productViewModels);
         }
-        private async Task<List<Product>> GetSortedProductsAsync(string sortOrder)
-        {
-            var products= await _productService.GetAllProductsAsync();
-            return sortOrder switch
-            {
-                "priceAsc" => products.OrderBy(p => p.Price).ToList(),
-                "priceDesc" => products.OrderByDescending(p => p.Price).ToList(),
-                "nameAsc" => products.OrderBy(p => p.Name).ToList(),
-                "nameDesc" => products.OrderByDescending(p => p.Name).ToList(),
-                "timesBoughtDesc" => products.OrderByDescending(p => p.TimesBought).ToList(),
-                _ => products.ToList(), // Domyœlne sortowanie
-            };
-        }
 
-        public async Task<IActionResult> Products()
+        public async Task<IActionResult> Products(int pageNumber = 1, int pageSize = 5)
         {
-            var products = await _productService.GetAllProductsAsync();
+            // Pobierz dostêpne waluty
             var currencies = await _currencyService.GetAllCurrenciesAsync();
-            // Pobierz wybran¹ walutê z ciasteczek lub domyœlnie ustaw PLN
             var preferredCurrencyCode = Request.Cookies["PreferredCurrency"] ?? "PLN";
-
             var preferredCurrency = currencies.FirstOrDefault(c => c.Code == preferredCurrencyCode);
             if (preferredCurrency == null)
             {
                 preferredCurrency = currencies.FirstOrDefault(c => c.Code == "PLN");
             }
+
+            // Pobierz listê produktów z paginacj¹
+            var products = await _productService.GetPaginatedProductsAsync(pageNumber, pageSize);
+
+            // Sortowanie (opcjonalne, jeœli jest potrzebne)
             var sortOrder = Request.Cookies["SortOrder"] ?? "default"; // Domyœlnie "default"
-
             TempData["SortOrder"] = sortOrder;
-            products = await GetSortedProductsAsync(sortOrder);
 
+            // Zastosuj sortowanie po paginacji
+            products = GetSortedProductsAsync(sortOrder, products).ToList();
+
+            // Zliczanie ³¹cznej liczby produktów, aby obliczyæ liczbê stron
+            var totalProducts = await _productService.GetTotalProductCountAsync();
+            var totalPages = (int)Math.Ceiling((double)totalProducts / pageSize);  // Obliczanie liczby stron
+
+            // Tworzenie ViewModelu
             var productViewModels = products.Select(product => new ProductViewModel
             {
                 ProductId = product.ProductId,
@@ -95,9 +99,34 @@ namespace clothing_store.Controllers
                 Quantity = product.Quantity
             }).ToList();
 
+            // Przekazanie danych do widoku
+            var viewModel = new ProductListViewModel
+            {
+                Products = productViewModels,
+                CurrentPage = pageNumber,
+                TotalPages = totalPages,
+                PageSize = pageSize
+            };
 
-            return View(productViewModels);
+            return View(viewModel);
         }
+
+        // Update GetSortedProductsAsync to accept already paginated products
+        private IEnumerable<Product> GetSortedProductsAsync(string sortOrder, List<Product> products)
+        {
+            return sortOrder switch
+            {
+                "priceAsc" => products.OrderBy(p => p.Price),
+                "priceDesc" => products.OrderByDescending(p => p.Price),
+                "nameAsc" => products.OrderBy(p => p.Name),
+                "nameDesc" => products.OrderByDescending(p => p.Name),
+                "timesBoughtDesc" => products.OrderByDescending(p => p.TimesBought),
+                _ => products, // Domyœlne sortowanie
+            };
+        }
+
+
+
 
 
         public IActionResult Privacy()

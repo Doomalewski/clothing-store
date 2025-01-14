@@ -25,49 +25,60 @@
 
 
 <div class="product-container">
-    @foreach (var product in Model)
+    @if (!Model.Any())
     {
-        var isSoldOut = product.Quantity <= 0;
-        <div class="product-card">
-            <!-- Product Image -->
-            @if (product.New)
-            {
-                <div class="new-badge">NEW</div>
-            }
-            <div class="product-image-container">
-                <a asp-controller="Product" asp-action="Details" asp-route-id="@product.ProductId" class="product-image-link">
-                    <img src="~/Images/@(product.Name + "1.jpg")" alt="@product.Name" class="product-image">
-                </a>
-            </div>
-            @if (isSoldOut)
-            {
-                <div class="sold-out-overlay">SOLD OUT</div>
-            }
-            <!-- Footer Section -->
-            <div class="product-footer">
-                <div class="product-info">
-                    <p class="product-name">@product.Name</p>
-                    <p class="product-price">@product.ConvertedPrice @product.Currency.Code</p>
-                </div>
-                @if (!isSoldOut)
-                {
-                    <form asp-controller="Account" asp-action="AddProductToCart" method="post" class="add-to-cart-form">
-                        <input type="hidden" name="id" value="@product.ProductId" />
-                    <button type="submit" class="add-to-cart-button">
-                        <img src="~/Images/shopping-cart-icon.jpg" alt="Add to Cart" class="cart-icon">
-                    </button>
-                </form>
-                }
-                <!-- Conditional Button (Visible only for Admin) -->
-                @if (User.IsInRole("Admin"))
-                {
-                    <a asp-controller="Product" asp-action="EditDiscount" asp-route-id="@product.ProductId" class="btn btn-primary mt-2">
-                        Edytuj rabat
-                    </a>
-                }
-            </div>
+        <div class="alert alert-warning text-center">
+            No products found matching your search query.
         </div>
     }
+    else
+    {
+        @foreach (var product in Model)
+        {
+            var isSoldOut = product.Quantity <= 0;
+            <div class="product-card">
+                <!-- Product Image -->
+                @if (isSoldOut)
+                {
+                    <div class="sold-out-badge">SOLD OUT</div>
+                }
+                else if (product.New)
+                {
+                    <div class="new-badge">NEW</div>
+                }
+                <div class="product-image-container">
+                    <a asp-controller="Product" asp-action="Details" asp-route-id="@product.ProductId" class="product-image-link">
+                        <img src="~/Images/@(product.Name + "1.jpg")" alt="@product.Name" class="product-image">
+                    </a>
+                </div>
+
+                <!-- Footer Section -->
+                <div class="product-footer">
+                    <div class="product-info">
+                        <p class="product-name">@product.Name</p>
+                        <p class="product-price">@product.ConvertedPrice @product.Currency.Code</p>
+                    </div>
+                    @if (!isSoldOut)
+                    {
+                        <form asp-controller="Account" asp-action="AddProductToCart" method="post" class="add-to-cart-form">
+                            <input type="hidden" name="id" value="@product.ProductId" />
+                            <button type="submit" class="add-to-cart-button">
+                                <img src="~/Images/shopping-cart-icon.jpg" alt="Add to Cart" class="cart-icon">
+                            </button>
+                        </form>
+                    }
+                    <!-- Conditional Button (Visible only for Admin) -->
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-controller="Product" asp-action="EditDiscount" asp-route-id="@product.ProductId" class="btn btn-primary mt-2">
+                            Edytuj rabat
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+    }
+    
 </div>
 <script>
     // Zapisuje wybraną wartość sortowania w ciasteczku
