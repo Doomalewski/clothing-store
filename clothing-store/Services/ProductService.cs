@@ -6,10 +6,11 @@ namespace clothing_store.Services
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
-
-        public ProductService(IProductRepository repository)
+        private readonly ICurrencyService _currencyService;
+        public ProductService(IProductRepository repository, ICurrencyService currencyService)
         {
             _productRepository = repository;
+            _currencyService = currencyService;
         }
 
         public async Task<Product> GetProductByIdAsync(int productId) => await _productRepository.GetProductByIdAsync(productId);
@@ -57,5 +58,32 @@ namespace clothing_store.Services
             //sorted from old to new
             return newProducts.OrderBy(p => p.TimePosted).FirstOrDefault();
         }
+        public async Task<ProductDetailsDto> GetProductDetailsDtoAsync(int id, string preferredCurrencyCode)
+        {
+            var product = await GetProductByIdAsync(id);
+            if (product == null)
+            {
+                throw new ArgumentException("Product not found.");
+            }
+
+            var currencies = await _currencyService.GetAllCurrenciesAsync();
+            var preferredCurrency = currencies.FirstOrDefault(c => c.Code == preferredCurrencyCode)
+                                    ?? currencies.FirstOrDefault(c => c.Code == "PLN");
+            return new ProductDetailsDto
+            {
+                ProductId = product.ProductId,
+                Name = product.Name,
+                Description = product.Description,
+                ConvertedPrice = Math.Round(product.Price / preferredCurrency.Rate, 2),
+                ConvertedDiscountPrice = product.DiscountPrice.HasValue
+                ? Math.Round(product.DiscountPrice.Value / preferredCurrency.Rate, 2)
+                : (decimal?)null,
+                Currency = preferredCurrency?.Code ?? "PLN",
+                InStock = product.InStock,
+                Quantity = product.Quantity,
+                Photos = product.Photos
+            };
+        }
+
     }
 }

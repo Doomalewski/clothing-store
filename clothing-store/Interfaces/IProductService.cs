@@ -10,5 +10,7 @@ namespace clothing_store.Interfaces
         public Task UpdateProductAsync(Product product);
         public Task DeleteProductByIdAsync(int productId);
         public Task<Product> GetOldestNewProductAsync();
+        public Task<ProductDetailsDto> GetProductDetailsDtoAsync(int id, string preferredCurrencyCode);
+
     }
 }

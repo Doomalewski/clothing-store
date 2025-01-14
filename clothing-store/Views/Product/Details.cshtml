@@ -1,4 +1,4 @@
-@model clothing_store.Models.Product
+@model clothing_store.Models.ProductDetailsDto
 
 <head>
     <link rel="stylesheet" href="~/css/product.css" asp-append-version="true" />
@@ -48,11 +48,11 @@
             <h2>@Model.Name</h2>
             <p class="text-muted">@Model.Description</p>
             <h4>
-                <strong>@Model.Price.ToString("C")</strong>
-                @if (Model.DiscountPrice.HasValue && Model.DiscountPrice > 0)
+                <strong>@Model.ConvertedPrice @Model.Currency</strong>
+                @if (Model.ConvertedDiscountPrice.HasValue && Model.ConvertedDiscountPrice > 0)
                 {
-                    <span class="text-decoration-line-through text-muted">@Model.Price.ToString("C")</span>
-                    <span class="text-success"> discount @((100 - (Model.DiscountPrice.Value / Model.Price) * 100).ToString("F0"))%</span>
+                    <span class="text-decoration-line-through text-muted">@Model.ConvertedPrice.ToString("C")</span>
+                    <span class="text-success"> discount @((100 - (Model.ConvertedDiscountPrice.Value / Model.ConvertedPrice) * 100).ToString("F0"))%</span>
                 }
             </h4>
 

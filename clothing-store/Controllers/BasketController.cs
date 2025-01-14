@@ -1,6 +1,7 @@
 ﻿using clothing_store.Interfaces;
 using clothing_store.Interfaces.clothing_store.Interfaces;
 using clothing_store.Models;
+using clothing_store.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -11,11 +12,13 @@ namespace clothing_store.Controllers
         private readonly IBasketService _basketService;
         private readonly IAccountService _accountService;
         private readonly IProductService _productService;
-        public BasketController(IBasketService basketService,IAccountService accountService,IProductService productService )
+        private readonly ICurrencyService _currencyService;
+        public BasketController(IBasketService basketService,IAccountService accountService,IProductService productService, ICurrencyService currencyService)
         {
             _basketService = basketService;
             _accountService = accountService;
             _productService = productService;
+            _currencyService = currencyService;
         }
         
         public IActionResult Checkout()
@@ -48,9 +51,17 @@ namespace clothing_store.Controllers
             }
 
             int accountId = int.Parse(accountIdClaim.Value);
+            var currencies = await _currencyService.GetAllCurrenciesAsync();
 
+            var preferredCurrencyCode = Request.Cookies["PreferredCurrency"] ?? "PLN";
+            var preferredCurrency = currencies.FirstOrDefault(c => c.Code == preferredCurrencyCode) ?? currencies.FirstOrDefault(c => c.Code == "PLN");
             var items = await _basketService.GetBasketByAccountIdAsync(accountId);
-            return View(items);
+            var BasketDto = new BasketIndexDto
+            {
+                basket = items,
+                currency = preferredCurrency
+            };
+            return View(BasketDto);
         }
         [HttpPost]
         public async Task<IActionResult> UpdateCart(int productId, string action)

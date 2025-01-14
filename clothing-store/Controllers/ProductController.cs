@@ -121,12 +121,20 @@ namespace clothing_store.Controllers
 
 
 
-        // GET: ProductController/Edit/5
-        public async Task<ActionResult> Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var product = await _productService.GetProductByIdAsync(id);
-            return View(product);
+            try
+            {
+                var preferredCurrencyCode = Request.Cookies["PreferredCurrency"] ?? "PLN";
+                var productDetails = await _productService.GetProductDetailsDtoAsync(id, preferredCurrencyCode);
+                return View(productDetails);
+            }
+            catch (ArgumentException)
+            {
+                return NotFound();
+            }
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
