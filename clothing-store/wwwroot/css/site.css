@@ -77,7 +77,7 @@ body {
 }
 .baner {
     width: 100%; /* Pe�na szeroko�� strony */
-    height: 300px; /* Wysoko�� 300px */
+    height: 200px; /* Wysoko�� 300px */
     overflow: hidden; /* Ukrycie nadmiaru zdj�cia */
     position: relative; /* Aby efekt dzia�a� poprawnie */
     transition: background 0.3s ease-in-out; /* P�ynna zmiana gradientu przy najechaniu */
@@ -329,6 +329,106 @@ footer {
     background-color:darkorange;
     border-color:darkorange !important;
 }
+.sorting-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px auto;
+}
+
+.sort-label {
+    font-size: 16px;
+    margin-right: 10px;
+    font-weight: bold;
+    color: #333;
+}
+
+.sort-dropdown {
+    appearance: none; /* Removes default browser styling */
+    background-color: #f9f9f9;
+    color: #333;
+    font-size: 14px;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+    .sort-dropdown:focus {
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        border-color: #007bff;
+    }
+
+    .sort-dropdown:hover {
+        background-color: #f0f0f0;
+    }
+
+    .sort-dropdown option {
+        font-size: 14px;
+        padding: 5px;
+    }
+
+/* Mobile-friendly adjustments */
+@media (max-width: 768px) {
+    .sort-dropdown {
+        font-size: 12px;
+        padding: 8px 10px;
+    }
+
+    .sort-label {
+        font-size: 14px;
+    }
+}
+.product-page-container {
+    max-width: 800px; /* Maksymalna szerokość */
+    margin: 0 auto; /* Centrowanie kontenera */
+    padding: 20px; /* Odstępy wewnętrzne */
+    text-align: center; /* Wyśrodkowanie tekstu */
+}
+
+.search-form {
+    margin-bottom: 20px; /* Odstęp od sekcji produktów */
+    display: flex;
+    justify-content: center;
+}
+
+.search-input {
+    width: 70%; /* Szerokość pola wyszukiwania */
+    border-radius: 20px; /* Zaokrąglenie */
+}
+
+.search-btn {
+    margin-left: 10px; /* Odstęp od pola wyszukiwania */
+    border-radius: 20px;
+    background-color: darkorange;
+    border-color: darkorange;
+}
+
+.pagination-container {
+    margin-top: 20px; /* Odstęp od sekcji produktów */
+}
+
+.pagination {
+    margin-bottom: 0; /* Wyłączenie domyślnego odstępu */
+}
+
+    .pagination .page-item .page-link {
+        border-radius: 50px; /* Zaokrąglone przyciski */
+        color: #007bff; /* Kolor tekstu */
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+        .pagination .page-item .page-link:hover {
+            background-color: #007bff; /* Kolor tła po najechaniu */
+            color: #fff; /* Kolor tekstu po najechaniu */
+        }
+
+    .pagination .page-item.disabled .page-link {
+        background-color: #f8f9fa; /* Tło dla wyłączonego przycisku */
+        color: #6c757d; /* Kolor tekstu */
+        pointer-events: none; /* Wyłącz interakcje */
+    }
 
 @keyframes fadeOut {
     0% {
@@ -344,6 +444,28 @@ footer {
         transform: translateX(-50%) translateY(-10px); /* Delikatne przesunięcie w górę przy zaniku */
     }
 }
+.container {
+    font-family: Arial, sans-serif;
+}
+
+h1, h3, h4 {
+    font-weight: bold;
+}
+
+.table thead th {
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f2f2f2;
+}
+
+.btn-lg {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+}
+
 
 
 

@@ -36,7 +36,9 @@ namespace clothing_store.Controllers
             };
 
             return View(model);
+        
         }
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> DashboardAsync()
         {
             var unreadNotifications = await _notificationService.GetUnreadNotificationsAsync();

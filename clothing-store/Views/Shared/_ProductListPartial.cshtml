@@ -11,8 +11,8 @@
 
 <div class="sorting-container">
     <form method="get" asp-action="@currentAction" asp-controller="@currentController" class="sort-form">
-        <label for="sortOrder">Sortuj według:</label>
-        <select id="sortOrder" name="sortOrder" class="sort-dropdown" onchange="saveSortOrder(this.value)">
+        <label for="sortOrder" class="sort-label">Sortuj według:</label>
+        <select id="sortOrder" name="sortOrder" class="sort-dropdown" onchange="saveSortOrder(this.value)" aria-label="Select sorting order">
             <option value="default" selected>Domyślnie</option>
             <option value="priceAsc">Cena rosnąco</option>
             <option value="priceDesc">Cena malejąco</option>
@@ -22,6 +22,7 @@
         </select>
     </form>
 </div>
+
 
 
 <div class="product-container">
@@ -56,7 +57,17 @@
                 <div class="product-footer">
                     <div class="product-info">
                         <p class="product-name">@product.Name</p>
-                        <p class="product-price">@product.ConvertedPrice @product.Currency.Code</p>
+                        @if (product.IsDiscounted)
+                        {
+                            <p style="margin-left:10px">
+                                @product.ConvertedDiscountPrice @product.Currency.Code                            
+                                <span class="text-decoration-line-through text-muted" style="margin-left:10px">@product.ConvertedPrice @product.Currency.Code</span>
+                            </p>
+                        }
+                        else
+                        {
+                            <p style="margin-left:10px">@product.ConvertedPrice @product.Currency.Code</p>
+                        }
                     </div>
                     @if (!isSoldOut)
                     {
@@ -66,13 +77,6 @@
                                 <img src="~/Images/shopping-cart-icon.jpg" alt="Add to Cart" class="cart-icon">
                             </button>
                         </form>
-                    }
-                    <!-- Conditional Button (Visible only for Admin) -->
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <a asp-controller="Product" asp-action="EditDiscount" asp-route-id="@product.ProductId" class="btn btn-primary mt-2">
-                            Edytuj rabat
-                        </a>
                     }
                 </div>
             </div>

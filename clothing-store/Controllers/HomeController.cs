@@ -54,6 +54,7 @@ namespace clothing_store.Controllers
             ViewData["SearchQuery"] = searchQuery;
 
             // Przekszta³cenie produktów na widokowy model
+            // Przekszta³cenie produktów na widokowy model
             var productViewModels = topProducts.Select(product => new ProductViewModel
             {
                 ProductId = product.ProductId,
@@ -61,9 +62,13 @@ namespace clothing_store.Controllers
                 Currency = preferredCurrency,
                 Price = product.Price,
                 ConvertedPrice = Math.Round(product.Price / preferredCurrency.Rate, 2),
+                ConvertedDiscountPrice = product.DiscountPrice.HasValue
+                    ? Math.Round(product.DiscountPrice.Value / preferredCurrency.Rate, 2)
+                    : (decimal?)null,
                 New = product.New,
                 Quantity = product.Quantity
             }).ToList();
+
 
             return View(productViewModels);
         }
@@ -106,6 +111,7 @@ namespace clothing_store.Controllers
             products = products.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
             // Tworzenie ViewModelu
+            // Przekszta³cenie produktów na widokowy model
             var productViewModels = products.Select(product => new ProductViewModel
             {
                 ProductId = product.ProductId,
@@ -113,9 +119,13 @@ namespace clothing_store.Controllers
                 Currency = preferredCurrency,
                 Price = product.Price,
                 ConvertedPrice = Math.Round(product.Price / preferredCurrency.Rate, 2),
+                ConvertedDiscountPrice = product.DiscountPrice.HasValue
+                    ? Math.Round(product.DiscountPrice.Value / preferredCurrency.Rate, 2)
+                    : (decimal?)null, // Handle nullable discount price
                 New = product.New,
                 Quantity = product.Quantity
             }).ToList();
+
 
             // Przekazanie danych do widoku
             var viewModel = new ProductListViewModel

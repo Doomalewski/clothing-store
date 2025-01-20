@@ -22,8 +22,10 @@
                 <li><a class="dropdown-item" href="#" data-currency="USD">USD</a></li>
                 <li><a class="dropdown-item" href="#" data-currency="EUR">EUR</a></li>
             </ul>
-
-            <a asp-controller="Admin" asp-action="Dashboard"> Dashboard</a>
+            @if(User.IsInRole("Admin"))
+            {
+                <a asp-controller="Admin" asp-action="Dashboard"> Dashboard</a>
+            }
             <a asp-controller="Basket" asp-action="Index">Koszyk</a>
             @if (User.Identity.IsAuthenticated)
             {

@@ -322,12 +322,16 @@ namespace clothing_store.Controllers
         [HttpPost]
         public async Task<IActionResult> AddProductToCart(int id)
         {
+            var loggedAccount = await _accountService.GetAccountFromHttpAsync();
+            if(loggedAccount == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
             var productToAdd = await _productService.GetProductByIdAsync(id);
             if (productToAdd == null)
             {
                 return NotFound();
             }
-            var loggedAccount = await _accountService.GetAccountFromHttpAsync();
             var basket = await _basketService.GetBasketByAccountIdAsync(loggedAccount.AccountId);
             var basketProduct = basket.BasketProducts.FirstOrDefault(bp => bp.ProductId == id);
 
