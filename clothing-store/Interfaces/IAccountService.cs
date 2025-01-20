@@ -20,6 +20,7 @@ namespace clothing_store.Interfaces
         public Task<string> GeneratePasswordResetTokenAsync(int accountId);
         public Task<bool> ResetPasswordAsync(int accountId, string token, string newPassword);
         public Task<bool> ValidateResetTokenAsync(int accountId, string token);
+        public Task UpdateAccountAsync(Account account);
 
     }
 }

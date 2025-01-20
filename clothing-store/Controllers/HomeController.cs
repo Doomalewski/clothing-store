@@ -42,7 +42,7 @@ namespace clothing_store.Controllers
             }
 
             // Sortowanie po filtracji
-            products = GetSortedProductsAsync(sortOrder, products).ToList();
+            products = GetSortedProductsAsync(sortOrder, products).Where(p => p.Visible == true).ToList();
 
             // Pobranie top 10 produktów (najczêœciej kupowane)
             var topProducts = products
@@ -101,7 +101,7 @@ namespace clothing_store.Controllers
             TempData["SortOrder"] = sortOrder;
 
             // Zastosuj sortowanie po filtracji
-            products = GetSortedProductsAsync(sortOrder, products).ToList();
+            products = GetSortedProductsAsync(sortOrder, products).Where(p=>p.Visible==true).ToList();
 
             // Zliczanie ³¹cznej liczby produktów, aby obliczyæ liczbê stron
             var totalProducts = products.Count();

@@ -10,6 +10,7 @@
         public Task<Account> GetAccountByEmailAsync(string email);
         public Task UpdateResetTokenAsync(int accountId, string token, DateTime expiration);
         public Task UpdatePasswordAndClearTokenAsync(int accountId, string hashedPassword);
+        public Task UpdateAccountAsync(Account account);
 
     }
 }

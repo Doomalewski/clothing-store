@@ -303,22 +303,6 @@ namespace clothing_store.Controllers
             return View(viewModel);
         }
 
-
-        [HttpPost]
-        public async Task<IActionResult> ToggleNewsletterSubscription()
-        {
-            var account = await _accountService.GetAccountFromHttpAsync();
-            if (account == null)
-            {
-                return NotFound();
-            }
-
-            account.Newsletter = !account.Newsletter;
-            //await _accountService.UpdateAccountAsync(account);
-
-            return RedirectToAction("Newsletter");
-        }
-
         [HttpPost]
         public async Task<IActionResult> AddProductToCart(int id)
         {
@@ -493,18 +477,6 @@ namespace clothing_store.Controllers
                 await _productService.UpdateProductAsync(productToUpdate);
             }
 
-            // 7. Dodanie produktów do zamówienia
-            foreach (var item in basket.BasketProducts)
-            {
-                var orderProduct = new OrderProduct
-                {
-                    OrderId = order.OrderId,
-                    ProductId = item.ProductId,
-                    Quantity = item.Quantity
-                };
-
-                await _orderService.AddOrderProductAsync(orderProduct);
-            }
 
             // 8. Po zapisaniu zamówienia, opróżnianie koszyka
             await _accountService.ClearBasketAsync(model.AccountId);
@@ -611,6 +583,28 @@ namespace clothing_store.Controllers
 
             TempData["Message"] = "Your password has been reset successfully.";
             return RedirectToAction("Login");
+        }
+        [HttpPost]
+        public async Task<IActionResult> ToggleNewsletterSubscription()
+        {
+            // Get the current user's account
+            var user = await _accountService.GetAccountFromHttpAsync();
+            var account = await _accountService.GetAccountByIdAsync(user.AccountId);
+
+            if (account == null)
+            {
+                return NotFound(); // Handle the case where the user is not found
+            }
+
+            // Toggle the newsletter subscription status
+            account.Newsletter = !account.Newsletter;
+
+            // Save changes to the database
+            await _accountService.UpdateAccountAsync(account);
+
+            // Redirect to the same page with a success message
+            TempData["Message"] = account.Newsletter ? "You have successfully subscribed to the newsletter." : "You have successfully unsubscribed from the newsletter.";
+            return RedirectToAction("Newsletter");
         }
     }
 }

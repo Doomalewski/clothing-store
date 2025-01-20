@@ -31,23 +31,22 @@
             <div class="p-4 rounded" style="background-color: #000; color: #fff;">
                 <h3 class="text-white" style="font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem;">Newsletter Subscription</h3>
 
-                <div>
-                    <p class="text-white">
-                       
-                        
-                            You are currently subscribed to our newsletter.
-                        
-                        else
-                        
-                            You are not subscribed to our newsletter.
-                        
-                    </p>
-                    <form >
-                        <button type="submit" class="btn btn-primary">
-                            @(Model.Account.Newsletter ? "Unsubscribe" : "Subscribe")
-                        </button>
-                    </form>
-                </div>
+                <p class="text-white">
+                    @if (Model.Account.Newsletter)
+                    {
+                        <span>You are currently subscribed to our newsletter.</span>
+                    }
+                    else
+                    {
+                        <span>You are not subscribed to our newsletter.</span>
+                    }
+                </p>
+                <form method="post" asp-action="ToggleNewsletterSubscription">
+                    <button type="submit" class="btn btn-primary">
+                        @(Model.Account.Newsletter ? "Unsubscribe" : "Subscribe")
+                    </button>
+                </form>
+
             </div>
         </div>
     </div>

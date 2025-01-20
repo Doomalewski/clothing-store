@@ -120,6 +120,9 @@ namespace clothing_store.Services
 
             return true;
         }
-
+        public async Task UpdateAccountAsync(Account account)
+        {
+            await _accountRepository.UpdateAccountAsync(account);
+        }
     }
 }
